@@ -15,7 +15,7 @@ def read_txt():
         key_value = line.split(' ')
         raw_path = key_value[0]
         new_path = raw_path.replace('/home/meteo/zihao.chen/filter_ext/img_data',Image_Path)
-        print new_path
+        # print new_path
         temp_list = []
         key_value = line.split('.jpg ')
         data_str = key_value[1]
