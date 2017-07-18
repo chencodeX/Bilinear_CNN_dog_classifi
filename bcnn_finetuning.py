@@ -10,6 +10,7 @@ from tflearn.data_utils import shuffle
 
 import pickle 
 from tflearn.data_utils import image_preloader
+from utils import data_loader
 from utils.utils import touch_dir
 import h5py
 import math
@@ -297,23 +298,23 @@ class vgg16:
 
 if __name__ == '__main__':
 
-    '''
-    Load Training and Validation Data
-    '''
-    # train_data = h5py.File('../new_train.h5', 'r')
-    val_data = h5py.File('./new_val_224.h5', 'r')
-    
-    print('Input data read complete')
-
-    # X_train, Y_train = train_data['X'], train_data['Y']
-    X_val, Y_val = val_data['X'], val_data['Y']
-    print("Data shapes -- (val)", X_val.shape, Y_val.shape)
-
-    '''Shuffle the data'''
-    # X_train, Y_train = shuffle(X_train, Y_train)
-    X_val, Y_val = shuffle(X_val, Y_val)
-    print("Data shapes -- ( val)", X_val.shape, X_val.shape)
-    
+    # '''
+    # Load Training and Validation Data
+    # '''
+    # # train_data = h5py.File('../new_train.h5', 'r')
+    # val_data = h5py.File('./new_val_224.h5', 'r')
+    #
+    # print('Input data read complete')
+    #
+    # # X_train, Y_train = train_data['X'], train_data['Y']
+    # X_val, Y_val = val_data['X'], val_data['Y']
+    # print("Data shapes -- (val)", X_val.shape, Y_val.shape)
+    #
+    # '''Shuffle the data'''
+    # # X_train, Y_train = shuffle(X_train, Y_train)
+    # X_val, Y_val = shuffle(X_val, Y_val)
+    # print("Data shapes -- ( val)", X_val.shape, X_val.shape)
+    data_l = data_loader.data_loader(batch_size=8,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
     
     
     sess = tf.Session()     ## Start session to create training graph
@@ -335,7 +336,7 @@ if __name__ == '__main__':
     print([_.name for _ in vgg.parameters])
 
     
-    optimizer = tf.train.MomentumOptimizer(learning_rate=0.0005, momentum=0.9).minimize(loss)
+    optimizer = tf.train.MomentumOptimizer(learning_rate=0.00001, momentum=0.9).minimize(loss)
     
     check_op = tf.add_check_numerics_ops()
 
@@ -358,17 +359,17 @@ if __name__ == '__main__':
         print("Trainable variables", v)
     print('Starting training')
 
-    lr = 0.0005
+    lr = 0.00001
     finetune_step = -1
 
-    val_batch_size = 8
-    total_val_count = len(X_val)
-    correct_val_count = 0
+    val_batch_size = data_l.batch_szie
+    total_val_count = data_l.test_length
+    correct_val_count = 0.0
     val_loss = 0.0
     total_val_batch = int(total_val_count/val_batch_size)
 
     for i in range(total_val_batch):
-        batch_val_x, batch_val_y = X_val[i*val_batch_size:i*val_batch_size+val_batch_size], Y_val[i*val_batch_size:i*val_batch_size+val_batch_size]
+        batch_val_x, batch_val_y = data_l.get_test_data()
         print (batch_val_x.shape)
         print (batch_val_y.shape)
         val_loss += sess.run(loss, feed_dict={imgs: batch_val_x, target: batch_val_y})
@@ -392,66 +393,59 @@ if __name__ == '__main__':
         avg_cost = 0.
 
         batch_step = 0
-        for f_n in range(7):
-            train_data = h5py.File('./new_train_448_%d.h5'%f_n, 'r')
-            X_train, Y_train = train_data['X'], train_data['Y']
-
-            X_train, Y_train = shuffle(X_train, Y_train)
-
-            start_num = f_n*2048
-            file_batch_size = int(math.ceil(len(X_train) / float(batch_size)))
-
-
-            for i in range(file_batch_size):
-                batch_step += 1
-                batch_xs, batch_ys = X_train[i*batch_size:i*batch_size+batch_size], Y_train[i*batch_size:i*batch_size+batch_size]
-                # print (batch_xs.shape)
-                # print (batch_ys.shape)
-                batch_xs = random_flip_right_to_left(batch_xs)
+        total_test_count = data_l.train_length/(data_l.batch_szie/data_l.data_add)
+        for i in range(total_test_count):
+            batch_step += 1
+            batch_xs, batch_ys = data_l.get_test_data()
+            print (batch_xs.shape)
+            print (batch_ys.shape)
+            start = time.time()
+            sess.run([optimizer,check_op], feed_dict={imgs: batch_xs, target: batch_ys})
+            if batch_step%20==0:
+                print('Full BCNN finetuning, time to run optimizer for batch size 8:',time.time()-start,'seconds')
 
 
-                start = time.time()
-                sess.run([optimizer,check_op], feed_dict={imgs: batch_xs, target: batch_ys})
-                if batch_step%20==0:
-                    print('Full BCNN finetuning, time to run optimizer for batch size 8:',time.time()-start,'seconds')
+            cost = sess.run(loss, feed_dict={imgs: batch_xs, target: batch_ys})
 
+            if batch_step % 20 == 0:
+                print ('Learning rate: ', (str(lr)))
+                if epoch <= finetune_step:
+                    print("Training last layer of BCNN_DD")
+                else:
+                    print("Fine tuning all BCNN_DD")
 
-                cost = sess.run(loss, feed_dict={imgs: batch_xs, target: batch_ys})
+                print("Epoch:", '%03d' % (epoch+1), "Step:", '%03d' % batch_step,"Loss:", str(cost))
+                print("Training Accuracy -->", accuracy.eval(feed_dict={imgs: batch_xs, target: batch_ys}, session=sess))
+                #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
 
-                if batch_step % 20 == 0:
-                    print ('Learning rate: ', (str(lr)))
-                    if epoch <= finetune_step:
-                        print("Training last layer of BCNN_DD")
-                    else:
-                        print("Fine tuning all BCNN_DD")
+            if batch_step % 400 == 0:
+                val_batch_size = data_l.batch_szie
+                total_val_count = data_l.test_length
+                correct_val_count = 0.0
+                val_loss = 0.0
+                total_val_batch = int(total_val_count / val_batch_size)
 
-                    print("Epoch:", '%03d' % (epoch+1), "Step:", '%03d' % batch_step,"Loss:", str(cost))
-                    print("Training Accuracy -->", accuracy.eval(feed_dict={imgs: batch_xs, target: batch_ys}, session=sess))
-                    #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
-                
+                for j in range(total_val_batch):
+                    batch_val_x, batch_val_y = data_l.get_test_data()
+                    print(batch_val_x.shape)
+                    print(batch_val_y.shape)
+                    val_loss += sess.run(loss, feed_dict={imgs: batch_val_x, target: batch_val_y})
 
-        val_batch_size = 8
-        total_val_count = len(X_val)
-        correct_val_count = 0
-        val_loss = 0.0
-        total_val_batch = int(total_val_count/val_batch_size)
-        for i in range(total_val_batch):
-            batch_val_x, batch_val_y = X_val[i*val_batch_size:i*val_batch_size+val_batch_size], Y_val[i*val_batch_size:i*val_batch_size+val_batch_size]
-            val_loss += sess.run(loss, feed_dict={imgs: batch_val_x, target: batch_val_y})
+                    pred = sess.run(num_correct_preds, feed_dict={imgs: batch_val_x, target: batch_val_y})
+                    correct_val_count += pred
 
-            pred = sess.run(num_correct_preds, feed_dict = {imgs: batch_val_x, target: batch_val_y})
-            correct_val_count+=pred
+                print("##############################")
+                print("Validation Loss -->", val_loss)
+                print("correct_val_count, total_val_count", correct_val_count, total_val_count)
+                print("Validation Data Accuracy -->", 100.0 * correct_val_count / (1.0 * total_val_count))
+                print("##############################")
 
-        print("##############################")
-        print("Validation Loss -->", val_loss)
-        print("correct_val_count, total_val_count", correct_val_count, total_val_count)
-        print("Validation Data Accuracy -->", 100.0*correct_val_count/(1.0*total_val_count))
-        print("##############################")
-        checkpoint_path = os.path.join(os.getcwd(), 'model%d'%epoch)
-        touch_dir(checkpoint_path)
-        checkpoint_path = os.path.join(checkpoint_path,'model.ckpt')
-        saver.save(sess, checkpoint_path)
-        print("saved to " + checkpoint_path)
+                checkpoint_path = os.path.join(os.getcwd(), 'model%s' % str(epoch)+'_'+str(batch_step))
+                touch_dir(checkpoint_path)
+                checkpoint_path = os.path.join(checkpoint_path, 'model.ckpt')
+                saver.save(sess, checkpoint_path)
+                print("saved to " + checkpoint_path)
+
 
         if epoch>40:
 
@@ -464,23 +458,6 @@ if __name__ == '__main__':
                 else:
                     del validation_accuracy_buffer[0]
 
-
-        test_data = h5py.File('./new_test_448.h5', 'r')
-        X_test, Y_test = test_data['X'], test_data['Y']
-        total_test_count = len(X_test)
-        correct_test_count = 0
-        test_batch_size = 10
-        total_test_batch = int(total_test_count/test_batch_size)
-        for i in range(total_test_batch):
-            batch_test_x, batch_test_y = X_test[i*test_batch_size:i*test_batch_size+test_batch_size], Y_test[i*test_batch_size:i*test_batch_size+test_batch_size]
-
-            pred = sess.run(num_correct_preds, feed_dict = {imgs: batch_test_x, target: batch_test_y})
-            correct_test_count+=pred
-
-        print("##############################")
-        print("correct_test_count, total_test_count", correct_test_count, total_test_count)
-        print("Test Data Accuracy -->", 100.0*correct_test_count/(1.0*total_test_count))
-        print("##############################")
 
 
 
