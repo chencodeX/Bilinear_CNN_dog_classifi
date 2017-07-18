@@ -1,2 +1,2 @@
-# Bilinear_CNN_dog_classifi-
-百度流浪狗比赛
+# 使用BCNN网络结构测试细粒度分类效果
+
