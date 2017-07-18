@@ -45,7 +45,7 @@ class DownloadPic(object):
         root_dir = '/mnt/git/data/all_img'
         dog_keys = {}
         down_tasks = []
-        inf = open('val.txt','rb')
+        inf = open('data_train.txt','rb')
         lines = inf.readlines()  # 读取全部内容
         for line in lines:
             line = line.strip('\r\n')
