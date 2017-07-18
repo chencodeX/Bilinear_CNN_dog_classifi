@@ -39,3 +39,6 @@ def read_txt(txt_path):
     pickle.dump(all_pic_infs,file_d)
     file_d.close()
 
+
+
+read_txt()
