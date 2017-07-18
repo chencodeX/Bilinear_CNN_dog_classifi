@@ -20,7 +20,7 @@ class DownloadPic(object):
 
     def __init__(self):
         self.document_path=''
-        self.save_path = '/mnt/git/data/img_data_1'
+        self.save_path = '/mnt/git/data/img_data_1/image'
         self.table_name = ''
         self.start_index = 0
         self.root_path = os.getcwd()
