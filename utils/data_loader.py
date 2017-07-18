@@ -28,8 +28,9 @@ class data_loader(object):
     def load_keys(self):
         file_d = open('all_pic_infs.pkl', 'rb')
         pic_data = pickle.load(file_d)
-        pic_data = pic_data.values()
-        pic_data = random.shuffle(pic_data)
+        print pic_data
+        pic_data = pic_data.items()
+        random.shuffle(pic_data)
         file_d.close()
         print pic_data
         return pic_data
