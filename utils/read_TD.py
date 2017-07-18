@@ -1,9 +1,11 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
 
-from bdgod.dog_config import *
+# from bdgod.dog_config import *
 import cv2
 import pickle
+
+Image_Path = '/mnt/git/data/all_img'
 def read_txt(txt_path):
     all_pic_infs = {}
     inf = open('det_res.txt', 'rb')
