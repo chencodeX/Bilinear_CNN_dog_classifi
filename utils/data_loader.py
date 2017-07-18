@@ -4,7 +4,7 @@ import pickle
 import random
 import cv2
 import numpy as np
-from bdgod.data_augmentation import data_augmentation_img
+from data_augmentation import data_augmentation_img
 
 
 class data_loader(object):
