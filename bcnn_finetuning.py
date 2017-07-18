@@ -336,7 +336,7 @@ if __name__ == '__main__':
     print([_.name for _ in vgg.parameters])
 
     
-    optimizer = tf.train.MomentumOptimizer(learning_rate=0.00001, momentum=0.9).minimize(loss)
+    optimizer = tf.train.AdamOptimizer(learning_rate=0.00003,epsilon=0.1).minimize(loss)
     
     check_op = tf.add_check_numerics_ops()
 
