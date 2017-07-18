@@ -12,6 +12,7 @@ class data_loader(object):
         self.batch_szie = batch_size
         self.shuffle = shuffle
         self.all_pic_inf = self.load_keys()
+        print self.all_pic_inf
         self.all_data_length = len(self.all_pic_inf)
         self.proportion = proportion
         self.train_length = int(self.all_data_length * self.proportion)
