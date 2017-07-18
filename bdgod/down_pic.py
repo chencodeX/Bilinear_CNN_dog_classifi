@@ -7,15 +7,15 @@ author:     zihao.chen
 date:       2017/6/28
 descrption: 此模块详细作用描述
 """
-import xlrd
+# import xlrd
 # import urllib
 import os
-import datetime
-import urllib2
+# import datetime
+# import urllib2
 import shutil
 # import urllib
-import numpy as np
-from read_data import touch_dir
+# import numpy as np
+from utils.utils import touch_dir
 class DownloadPic(object):
 
     def __init__(self):
