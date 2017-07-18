@@ -31,6 +31,7 @@ class data_loader(object):
         pic_data = pic_data.values()
         pic_data = random.shuffle(pic_data)
         file_d.close()
+        print pic_data
         return pic_data
 
     def add_train_index(self):
