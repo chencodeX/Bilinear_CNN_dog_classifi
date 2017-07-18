@@ -28,11 +28,11 @@ class data_loader(object):
     def load_keys(self):
         file_d = open('all_pic_infs.pkl', 'rb')
         pic_data = pickle.load(file_d)
-        print pic_data
+        # print pic_data
         pic_data = pic_data.items()
         random.shuffle(pic_data)
         file_d.close()
-        print pic_data
+        # print pic_data
         return pic_data
 
     def add_train_index(self):
@@ -120,14 +120,14 @@ class data_loader(object):
         return result, all_labels
 
 
-dl = data_loader(batch_size=64,proportion=0.8,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=1000)
-for i in range(100):
-    X_data,Y_data = dl.get_train_data()
-    print X_data.shape
-    print Y_data.shape
-    X_data,Y_data = dl.get_test_data()
-    print X_data.shape
-    print Y_data.shape
+dl = data_loader(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=100)
+# for i in range(100):
+#     X_data,Y_data = dl.get_train_data()
+#     print X_data.shape
+#     print Y_data.shape
+#     X_data,Y_data = dl.get_test_data()
+#     print X_data.shape
+#     print Y_data.shape
 
 X_data,Y_data = dl.get_train_data()
 print X_data[0]
