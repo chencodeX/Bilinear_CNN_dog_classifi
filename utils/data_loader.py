@@ -80,7 +80,7 @@ class data_loader(object):
                 point_value[1]=0
             point_value[3] = point_value[3] + random.randint(0, rad_hight) - (rad_hight / 2)
             corp_img = img_temp_arr[point_value[1]:point_value[3],point_value[0]:point_value[2]]
-            all_imgs = data_augmentation_img(corp_img,data_size=448)
+            all_imgs = data_augmentation_img(corp_img,data_size=self.data_size)
             all_imgs = all_imgs[:self.data_add]
             assert len(all_imgs) == self.data_add
             result = np.concatenate((result,all_imgs),axis=0)
@@ -115,3 +115,17 @@ class data_loader(object):
 
         assert result.shape[0] == all_labels.shape[0]
         return result, all_labels
+
+
+dl = data_loader(batch_size=64,proportion=0.8,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=1000)
+for i in range(100):
+    X_data,Y_data = dl.get_train_data()
+    print X_data.shape
+    print Y_data.shape
+    X_data,Y_data = dl.get_test_data()
+    print X_data.shape
+    print Y_data.shape
+
+X_data,Y_data = dl.get_train_data()
+print X_data[0]
+print Y_data[0]
