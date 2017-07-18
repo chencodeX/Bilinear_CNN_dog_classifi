@@ -118,6 +118,8 @@ def load_data():
         # print test_data_Y.shape
         # return train_data_X,test_data_X,train_data_Y,test_data_Y
 
+# def data_loader(path)
+
 
 if __name__ == '__main__':
     # train_image_list, test_image_list,val_image_list = load_data()
