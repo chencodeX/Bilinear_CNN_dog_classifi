@@ -68,7 +68,7 @@ def load_image(file_list):
     for item in file_list:
         try:
             image = cv2.imread(item[0])
-            image = cv2.resize(image, (224, 224))
+            image = cv2.resize(image, (448, 448))
             image = image.transpose(2, 0, 1)
             X_data.append(image[None, ...])
             Y_data.append(int(item[1]))
