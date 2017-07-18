@@ -20,7 +20,7 @@ class DownloadPic(object):
 
     def __init__(self):
         self.document_path=''
-        self.save_path = '/mnt/git/data/img_data'
+        self.save_path = '/mnt/git/data/img_data_1'
         self.table_name = ''
         self.start_index = 0
         self.root_path = os.getcwd()
@@ -45,7 +45,7 @@ class DownloadPic(object):
         root_dir = '/mnt/git/data/all_img'
         dog_keys = {}
         down_tasks = []
-        inf = open('data_train.txt','rb')
+        inf = open('val.txt','rb')
         lines = inf.readlines()  # 读取全部内容
         for line in lines:
             line = line.strip('\r\n')
