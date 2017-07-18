@@ -15,7 +15,6 @@ import os
 import shutil
 # import urllib
 # import numpy as np
-from utils.utils import touch_dir
 class DownloadPic(object):
 
     def __init__(self):
@@ -73,3 +72,15 @@ class DownloadPic(object):
 dp = DownloadPic()
 dp.main()
 
+def touch_dir(path):
+    result = False
+    try:
+        path = path.strip().rstrip("\\")
+        if not os.path.exists(path):
+            os.makedirs(path)
+            result = True
+        else:
+            result = True
+    except:
+        result = False
+    return result
