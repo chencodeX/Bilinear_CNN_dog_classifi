@@ -14,65 +14,65 @@ import numpy as np
 import random
 import os
 
-from dog_config import *
+# from dog_config import *
 
-
-def data_augmentation(raw_path):
-    new_path = raw_path.replace('img_data', 'img_augmen_data')
-
-    raw_img = Image.open(raw_path)
-    width = raw_img.size[0]
-    height = raw_img.size[1]
-    max_l = max(raw_img.size)
-    min_l = min(raw_img.size)
-
-    # 平移
-    py_1 = ImageChops.offset(raw_img, int(width * 0.2), int(height * 0.2))
-    py_2 = ImageChops.offset(raw_img, -int(width * 0.2), -int(height * 0.2))
-
-    # 旋转
-    xz_1 = raw_img.transpose(Image.ROTATE_90)
-    xz_2 = raw_img.transpose(Image.ROTATE_180)
-    xz_3 = raw_img.transpose(Image.ROTATE_270)
-
-    # 镜像
-    jx_1 = raw_img.transpose(Image.FLIP_LEFT_RIGHT)
-    jx_2 = raw_img.transpose(Image.FLIP_TOP_BOTTOM)
-
-    # 仿射变换
-    params = (1 + random.random() * 0.2 - 0.1,
-              random.random() * 0.2 - 0.1,
-              random.random(),
-              random.random() * 0.3 - 0.15,
-              1 + random.random() * 0.2 - 0.1,
-              random.randint(0, 2) - 1)
-    fs_1 = raw_img.transform(raw_img.size, Image.AFFINE, params, Image.BILINEAR)
-    params = (1 + random.random() * 0.2 - 0.1,
-              random.random() * 0.2 - 0.1,
-              random.random(),
-              random.random() * 0.3 - 0.15,
-              1 + random.random() * 0.2 - 0.1,
-              random.randint(0, 2) - 1)
-    fs_2 = raw_img.transform(raw_img.size, Image.AFFINE, params, Image.BILINEAR)
-
-    # 随机切割
-    cc = transforms.CenterCrop(int(min_l * 0.8))
-    sq_1 = cc(raw_img)
-
-    rc = transforms.RandomCrop(int(min_l * 0.8))
-    sq_2 = rc(raw_img)
-    sq_3 = rc(raw_img)
-    sq_4 = rc(raw_img)
-
-    last_d = new_path.rfind('/')
-    file_dir = new_path[:last_d]
-    touch_dir(file_dir)
-    file_name = new_path[last_d + 1:-4]
-    all_imgs = [py_1, py_2, xz_1, xz_2, xz_3, jx_1, jx_2, fs_1, fs_2, sq_1, sq_2, sq_3, sq_4]
-    raw_img.save(new_path)
-    for i in range(len(all_imgs)):
-        img = all_imgs[i]
-        img.save(os.path.join(file_dir, file_name + '_%d.jpg' % i))
+#
+# def data_augmentation(raw_path):
+#     new_path = raw_path.replace('img_data', 'img_augmen_data')
+#
+#     raw_img = Image.open(raw_path)
+#     width = raw_img.size[0]
+#     height = raw_img.size[1]
+#     max_l = max(raw_img.size)
+#     min_l = min(raw_img.size)
+#
+#     # 平移
+#     py_1 = ImageChops.offset(raw_img, int(width * 0.2), int(height * 0.2))
+#     py_2 = ImageChops.offset(raw_img, -int(width * 0.2), -int(height * 0.2))
+#
+#     # 旋转
+#     xz_1 = raw_img.transpose(Image.ROTATE_90)
+#     xz_2 = raw_img.transpose(Image.ROTATE_180)
+#     xz_3 = raw_img.transpose(Image.ROTATE_270)
+#
+#     # 镜像
+#     jx_1 = raw_img.transpose(Image.FLIP_LEFT_RIGHT)
+#     jx_2 = raw_img.transpose(Image.FLIP_TOP_BOTTOM)
+#
+#     # 仿射变换
+#     params = (1 + random.random() * 0.2 - 0.1,
+#               random.random() * 0.2 - 0.1,
+#               random.random(),
+#               random.random() * 0.3 - 0.15,
+#               1 + random.random() * 0.2 - 0.1,
+#               random.randint(0, 2) - 1)
+#     fs_1 = raw_img.transform(raw_img.size, Image.AFFINE, params, Image.BILINEAR)
+#     params = (1 + random.random() * 0.2 - 0.1,
+#               random.random() * 0.2 - 0.1,
+#               random.random(),
+#               random.random() * 0.3 - 0.15,
+#               1 + random.random() * 0.2 - 0.1,
+#               random.randint(0, 2) - 1)
+#     fs_2 = raw_img.transform(raw_img.size, Image.AFFINE, params, Image.BILINEAR)
+#
+#     # 随机切割
+#     cc = transforms.CenterCrop(int(min_l * 0.8))
+#     sq_1 = cc(raw_img)
+#
+#     rc = transforms.RandomCrop(int(min_l * 0.8))
+#     sq_2 = rc(raw_img)
+#     sq_3 = rc(raw_img)
+#     sq_4 = rc(raw_img)
+#
+#     last_d = new_path.rfind('/')
+#     file_dir = new_path[:last_d]
+#     touch_dir(file_dir)
+#     file_name = new_path[last_d + 1:-4]
+#     all_imgs = [py_1, py_2, xz_1, xz_2, xz_3, jx_1, jx_2, fs_1, fs_2, sq_1, sq_2, sq_3, sq_4]
+#     raw_img.save(new_path)
+#     for i in range(len(all_imgs)):
+#         img = all_imgs[i]
+#         img.save(os.path.join(file_dir, file_name + '_%d.jpg' % i))
 
 
 def data_augmentation_img(raw_img, data_size=224):
@@ -181,14 +181,6 @@ def touch_dir(path):
     return result
 
 
-def load_dog_flist():
-    dog_key = os.listdir(Image_Path)
-    for key in dog_key:
-        key_image_dir = os.path.join(Image_Path, key)
-        key_all_file = os.listdir(key_image_dir)
-        for dk in key_all_file:
-            dog_path = os.path.join(key_image_dir, dk)
-            data_augmentation(dog_path)
 
 # data_augmentation('/home/meteo/zihao.chen/filter_ext/img_data/1/9.jpg')
 # load_dog_flist()
