@@ -1,20 +1,10 @@
 from __future__ import print_function
 import tensorflow as tf
 import numpy as np
-#from scipy.misc import imread, imresize
-import tflearn
-from tflearn.data_preprocessing import ImagePreprocessing
-from tflearn.data_augmentation import ImageAugmentation
 import os
-from tflearn.data_utils import shuffle
-
-import pickle 
-from tflearn.data_utils import image_preloader
-from utils import data_loader
+from utils.data_loader import data_loader_
 from utils.utils import touch_dir
-import h5py
-import math
-#import logging
+
 import random
 import time
 
@@ -314,7 +304,7 @@ if __name__ == '__main__':
     # # X_train, Y_train = shuffle(X_train, Y_train)
     # X_val, Y_val = shuffle(X_val, Y_val)
     # print("Data shapes -- ( val)", X_val.shape, X_val.shape)
-    data_l = data_loader.data_loader(batch_size=8,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
+    data_l = data_loader_(batch_size=8,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
     
     
     sess = tf.Session()     ## Start session to create training graph
