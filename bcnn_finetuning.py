@@ -343,7 +343,7 @@ if __name__ == '__main__':
     print([_.name for _ in vgg.parameters])
 
     
-    batch_size = 8
+    batch_size = 16
 
     for v in tf.trainable_variables():
         print("Trainable variables", v)
