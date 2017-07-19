@@ -266,20 +266,21 @@ if __name__ == '__main__':
 
     #with tf.device('/cpu:0'):
     # train_data = h5py.File('./new_train_224.h5', 'r')
-    val_data = h5py.File('./new_val_448.h5', 'r')
-    print 'Input data read complete'
-    print('Input data read complete')
-
-    # X_train, Y_train = train_data['X'], train_data['Y']
-    X_val, Y_val = val_data['X'], val_data['Y']
-
-    print("Data shapes -- ( val)", X_val.shape,Y_val.shape)
-    # X_train, Y_train = shuffle(X_train, Y_train)
-
-    X_val, Y_val = shuffle(X_val, Y_val)
-    #print Y_train[0]
-    print("Device placement on. Creating Session")
-    
+    # val_data = h5py.File('./new_val_448.h5', 'r')
+    # print 'Input data read complete'
+    # print('Input data read complete')
+    #
+    # # X_train, Y_train = train_data['X'], train_data['Y']
+    # X_val, Y_val = val_data['X'], val_data['Y']
+    #
+    # print("Data shapes -- ( val)", X_val.shape,Y_val.shape)
+    # # X_train, Y_train = shuffle(X_train, Y_train)
+    #
+    # X_val, Y_val = shuffle(X_val, Y_val)
+    # #print Y_train[0]
+    # print("Device placement on. Creating Session")
+    data_l = data_loader_(batch_size=8, proportion=0.85, shuffle=True, data_add=2, onehot=True, data_size=448,
+                          nb_classes=100)
     #sess = tf.Session(config=tf.ConfigProto(log_device_placement=False))
     sess = tf.Session()
     #sess = tf.InteractiveSession()

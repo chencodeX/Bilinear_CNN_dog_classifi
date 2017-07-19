@@ -8,7 +8,8 @@ from torch import optim
 from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
 from dog_config import *
-from data_augmentation import data_augmentation_img
+from utils.data_loader import data_loader_
+# from data_augmentation import data_augmentation_img
 from vggnet import vgg16
 from load_image import load_data
 import math
@@ -31,24 +32,31 @@ def predict(model, x_val):
     return output.cpu().data.numpy().argmax(axis=1)
 
 
+def adjust_learning_rate(optimizer, epoch):
+    lr = optimizer.lr  /10
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+
+
 def main():
     torch.manual_seed(42)
-    print 'loading....'
-    trX = np.load('bddog/trX.npy')
-    trY = np.load('bddog/trY.npy')
-    print 'load train data'
+    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=False,data_size=224,nb_classes=100)
+    # print 'loading....'
+    # trX = np.load('bddog/trX.npy')
+    # trY = np.load('bddog/trY.npy')
+    # print 'load train data'
     # trX = torch.from_numpy(trX).float()
     # trY = torch.from_numpy(trY).long()
-    teX = np.load('bddog/teX.npy').astype(np.float)
-    teY = np.load('bddog/teY.npy')
-    print 'load test data'
-    teX[:, 0, ...] -= MEAN_VALUE[0]
-    teX[:, 1, ...] -= MEAN_VALUE[1]
-    teX[:, 2, ...] -= MEAN_VALUE[2]
-    teX = torch.from_numpy(teX).float()
+    # teX = np.load('bddog/teX.npy').astype(np.float)
+    # teY = np.load('bddog/teY.npy')
+    # print 'load test data'
+    # teX[:, 0, ...] -= MEAN_VALUE[0]
+    # teX[:, 1, ...] -= MEAN_VALUE[1]
+    # teX[:, 2, ...] -= MEAN_VALUE[2]
+    # teX = torch.from_numpy(teX).float()
     # teY = torch.from_numpy(teY).long()
-    print 'numpy data to tensor'
-    n_examples = len(trX)
+    # print 'numpy data to tensor'
+    # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
     model = resnet101(pretrained=True, model_root=Model_Root)
@@ -124,42 +132,33 @@ def main():
     # optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
     #                         {'params':model.group2.parameters()}
     #                         ],lr=(1e-04),eps=1e-08, betas=(0.9, 0.999), weight_decay=0.0005)
-    optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
-                            {'params':model.group2.parameters()}
-                            ],lr=(1e-05))
+    optimizer_a = optim.Adam([{'params':model.group2.parameters()}
+                            ],lr=(1e-04))
 
+    optimizer_s = optim.SGD([{'params':model.layer4[2].parameters()},
+                            {'params':model.group2.parameters()}
+                            ],lr=(1e-03),momentum=0.9,weight_decay=0.0005)
+    optimizer = optimizer_a
+    optimizer.lr = (1e-04)
     # 全局优化
     # optimizer = optim.Adam(model.parameters(),lr=(1e-04),eps=1e-08,betas=(0.9, 0.999),weight_decay =0.0005)
-    batch_size = 64
-    data_aug_num = 4
+    batch_size = data_l.batch_szie
+    data_aug_num = data_l.data_add
     mini_batch_size = batch_size/data_aug_num
     epochs = 1000
     for e in range(epochs):
         cost = 0.0
+        if e==15:
+            optimizer.lr = (1e-04)
+        elif e==9:
+            optimizer =optimizer_s
 
-        num_batches_train = n_examples / mini_batch_size
+
+        num_batches_train = data_l.test_length / mini_batch_size
         print num_batches_train
         for k in range(num_batches_train):
-            print k
-            start, end = k * mini_batch_size, (k + 1) * mini_batch_size
-            batch_trX = trX[start:end]
-            batch_trY = trY[start:end]
-            batch_train_data_X = np.ones((0,3,224,224))
-            batch_train_data_Y = np.ones((0))
-            for index in range(mini_batch_size):
-                batch_train_data_X = np.concatenate((batch_train_data_X,data_augmentation_img(batch_trX[index])),axis=0)
-                temp_y = np.ones((data_aug_num*2))
-                temp_y[:] = batch_trY[index]
-                batch_train_data_Y = np.concatenate((batch_train_data_Y,temp_y),axis=0)
-            print batch_train_data_X.shape
-            print batch_train_data_Y.shape
-            np.random.seed(23)
-            nx = range(len(batch_train_data_X))
-            np.random.shuffle(nx)
-            batch_train_data_X = batch_train_data_X[nx]
-            batch_train_data_Y = batch_train_data_Y[nx]
-            batch_train_data_X = batch_train_data_X[:batch_size]
-            batch_train_data_Y = batch_train_data_Y[:batch_size]
+            batch_train_data_X,batch_train_data_Y = data_l.get_train_data()
+            batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
             batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
             batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
             batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
@@ -173,13 +172,13 @@ def main():
                 print 'all average train loss is : %f' % (cost / (k+1))
             if (k+1) %100 == 0:
                 acc = 0.0
-                num_batches_test = len(teX) / batch_size
+                num_batches_test = data_l.test_length / batch_size
                 for j in range(num_batches_test):
-                    start, end = j * batch_size, (j + 1) * batch_size
-                    predY = predict(model,teX[start:end])
+                    teX,teY = data_l.get_test_data()
+                    predY = predict(model,teX)
                     # print predY.dtype
                     # print teY[start:end]
-                    acc+=1.*np.mean(predY==teY[start:end])
+                    acc+=1.*np.mean(predY==teY)
                     # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
 
                 print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
