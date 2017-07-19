@@ -36,7 +36,7 @@ class data_loader(object):
         random.shuffle(pic_data)
 
         dog_key = os.listdir(Image_Path)
-        key_map = {dog_key[x]: x for x in range(100)}
+        self.key_map = {dog_key[x]: x for x in range(100)}
         file_d.close()
         # print pic_data
         return pic_data
@@ -71,6 +71,7 @@ class data_loader(object):
             data_temp = self.data_pop(train=True)
             image_path = data_temp[0]
             label = image_path.split('/')[-2]
+            label = self.key_map[label]
             labels = [int(label) for x in range(self.data_add)]
             all_labels +=labels
             image_points = data_temp[1]
@@ -109,6 +110,7 @@ class data_loader(object):
             data_temp = self.data_pop(train=False)
             image_path = data_temp[0]
             label = image_path.split('/')[-2]
+            label = self.key_map[label]
             labels = [int(label)]
             all_labels += labels
             img_temp = cv2.imread(image_path)
