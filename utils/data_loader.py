@@ -44,13 +44,13 @@ class data_loader_(object):
     def add_train_index(self):
         self.train_index += 1
         if self.train_index == self.train_length:
-            self.train_data = random.shuffle(self.train_data)
+            random.shuffle(self.train_data)
             self.train_index = 0
 
     def add_test_index(self):
         self.test_index += 1
         if self.test_index == self.test_length:
-            self.test_data = random.shuffle(self.test_data)
+            random.shuffle(self.test_data)
             self.test_index =0
 
     def data_pop(self, train=True):
