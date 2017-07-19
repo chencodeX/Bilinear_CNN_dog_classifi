@@ -144,6 +144,10 @@ def main():
                             ],lr=(1e-03),momentum=0.9,weight_decay=0.0005)
     optimizer = optimizer_a
     optimizer.lr = (1e-04)
+    print optimizer.lr
+    print optimizer.momentum
+    for param_group in optimizer.param_groups:
+        print param_group['lr']
     # 全局优化
     # optimizer = optim.Adam(model.parameters(),lr=(1e-04),eps=1e-08,betas=(0.9, 0.999),weight_decay =0.0005)
     batch_size = data_l.batch_szie
