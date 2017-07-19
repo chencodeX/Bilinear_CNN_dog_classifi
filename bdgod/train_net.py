@@ -185,6 +185,10 @@ def main():
                 num_batches_test = data_l.test_length / batch_size
                 for j in range(num_batches_test):
                     teX,teY = data_l.get_test_data()
+                    teX = teX.transpose(0, 3, 1, 2)
+                    teX[:, 0, ...] -= MEAN_VALUE[0]
+                    teX[:, 1, ...] -= MEAN_VALUE[1]
+                    teX[:, 2, ...] -= MEAN_VALUE[2]
                     teX = torch.from_numpy(teX).float()
                     # teY = torch.from_numpy(teY).long()
                     predY = predict(model,teX)
