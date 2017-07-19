@@ -152,7 +152,8 @@ def main():
     for e in range(epochs):
         cost = 0.0
         if e==15:
-            optimizer.lr = (1e-04)
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = param_group['lr'] * 0.99
         elif e==9:
             optimizer =optimizer_s
 
