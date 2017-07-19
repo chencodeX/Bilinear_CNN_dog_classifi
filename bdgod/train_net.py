@@ -145,7 +145,7 @@ def main():
     optimizer = optimizer_a
     optimizer.lr = (1e-04)
     print optimizer.lr
-    print optimizer.momentum
+    # print optimizer.momentum
     for param_group in optimizer.param_groups:
         print param_group['lr']
     # 全局优化
