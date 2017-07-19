@@ -304,7 +304,7 @@ if __name__ == '__main__':
     # # X_train, Y_train = shuffle(X_train, Y_train)
     # X_val, Y_val = shuffle(X_val, Y_val)
     # print("Data shapes -- ( val)", X_val.shape, X_val.shape)
-    data_l = data_loader_(batch_size=8,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
+    data_l = data_loader_(batch_size=16,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
     
     
     sess = tf.Session()     ## Start session to create training graph
