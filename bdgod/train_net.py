@@ -139,7 +139,8 @@ def main():
     optimizer_a = optim.Adam([{'params':model.group2.parameters()}
                             ],lr=(1e-04))
 
-    optimizer_s = optim.SGD([{'params':model.layer4[2].parameters()},
+    optimizer_s = optim.SGD([{'params':model.layer4[1].parameters()},
+                             {'params':model.layer4[2].parameters()},
                             {'params':model.group2.parameters()}
                             ],lr=(1e-04),momentum=0.9,weight_decay=0.0005)
     optimizer = optimizer_a
