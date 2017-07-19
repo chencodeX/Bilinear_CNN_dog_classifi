@@ -11,17 +11,10 @@ Only blinear layers are trained in this first step.
 # from __future__ import print_function
 import tensorflow as tf
 import numpy as np
-import tflearn
-from tflearn.data_preprocessing import ImagePreprocessing
-from tflearn.data_augmentation import ImageAugmentation
-import os
 from tflearn.data_utils import shuffle
-
-import pickle 
-from tflearn.data_utils import image_preloader
+from utils.data_loader import data_loader_
 import h5py
 import math
-# import logging
 import random
 import time
 

@@ -309,7 +309,7 @@ if __name__ == '__main__':
     
     sess = tf.Session()     ## Start session to create training graph
 
-    imgs = tf.placeholder(tf.float32, [None, 224, 224, 3])
+    imgs = tf.placeholder(tf.float32, [None, 448, 448, 3])
     target = tf.placeholder("float", [None, 100])
 
     #print 'Creating graph'
