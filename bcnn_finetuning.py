@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 import os
 from utils.data_loader import data_loader_
-from utils.utils import touch_dir
+from utils.utils_ import touch_dir
 
 import random
 import time

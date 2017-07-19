@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
-# import sys
-# sys.path.append("..")
+import sys
+sys.path.append("..")
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,7 +10,7 @@ from torch import optim
 from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
 from dog_config import *
-from ..utils.data_loader import data_loader_
+from utils.data_loader import data_loader_
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
 from load_image import load_data

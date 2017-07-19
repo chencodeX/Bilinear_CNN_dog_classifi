@@ -15,7 +15,7 @@ import os
 import shutil
 # import urllib
 # import numpy as np
-from utils.utils import touch_dir
+from utils.utils_ import touch_dir
 class DownloadPic(object):
 
     def __init__(self):
