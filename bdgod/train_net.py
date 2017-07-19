@@ -1,7 +1,8 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
-# import sys
+import sys
 # sys.path.append("..")
+print sys.path
 import numpy as np
 import torch
 import torch.nn as nn
