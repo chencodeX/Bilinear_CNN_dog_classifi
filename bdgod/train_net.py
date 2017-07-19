@@ -141,7 +141,7 @@ def main():
 
     optimizer_s = optim.SGD([{'params':model.layer4[2].parameters()},
                             {'params':model.group2.parameters()}
-                            ],lr=(1e-03),momentum=0.9,weight_decay=0.0005)
+                            ],lr=(1e-04),momentum=0.9,weight_decay=0.0005)
     optimizer = optimizer_a
     optimizer.lr = (1e-04)
     print optimizer.lr
