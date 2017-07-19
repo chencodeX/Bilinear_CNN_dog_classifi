@@ -386,7 +386,7 @@ if __name__ == '__main__':
         total_test_count = data_l.train_length/(data_l.batch_szie/data_l.data_add)
         for i in range(total_test_count):
             batch_step += 1
-            batch_xs, batch_ys = data_l.get_test_data()
+            batch_xs, batch_ys = data_l.get_train_data()
             print (batch_xs.shape)
             print (batch_ys.shape)
             start = time.time()
