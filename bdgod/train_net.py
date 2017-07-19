@@ -142,7 +142,7 @@ def main():
     optimizer_s = optim.SGD([{'params':model.layer4[1].parameters()},
                              {'params':model.layer4[2].parameters()},
                             {'params':model.group2.parameters()}
-                            ],lr=(1e-04),momentum=0.9,weight_decay=0.0005)
+                            ],lr=(1e-05),momentum=0.9,weight_decay=0.0005)
     optimizer = optimizer_a
     optimizer.lr = (1e-04)
     print optimizer.lr
@@ -157,10 +157,10 @@ def main():
     epochs = 1000
     for e in range(epochs):
         cost = 0.0
-        if e==9:
+        if e==13:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
-        elif e==4:
+        elif e==5:
             optimizer =optimizer_s
 
 
