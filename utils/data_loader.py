@@ -7,8 +7,8 @@ import random
 import cv2
 import os
 import numpy as np
-from bdgod.data_augmentation import data_augmentation_img
 from bdgod.dog_config import *
+from bdgod.data_augmentation import data_augmentation_img
 
 class data_loader(object):
     def __init__(self, batch_size, proportion=0.8, shuffle=True, data_add=4, onehot=True,data_size =224,nb_classes = 100):
