@@ -128,15 +128,15 @@ class data_loader_(object):
         return result, all_labels
 
 
-dl = data_loader(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=100)
-# for i in range(100):
-#     X_data,Y_data = dl.get_train_data()
-#     print X_data.shape
-#     print Y_data.shape
-#     X_data,Y_data = dl.get_test_data()
-#     print X_data.shape
-#     print Y_data.shape
-
-X_data,Y_data = dl.get_train_data()
-print X_data[0]
-print Y_data[0]
+# dl = data_loader(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=100)
+# # for i in range(100):
+# #     X_data,Y_data = dl.get_train_data()
+# #     print X_data.shape
+# #     print Y_data.shape
+# #     X_data,Y_data = dl.get_test_data()
+# #     print X_data.shape
+# #     print Y_data.shape
+#
+# X_data,Y_data = dl.get_train_data()
+# print X_data[0]
+# print Y_data[0]
