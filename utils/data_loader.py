@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
-# import sys
-# sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
+import sys
+sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
 import pickle
 import random
 import cv2
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         print Y_data.shape
         X_data,Y_data = dl.get_test_data()
         for x in range(len(X_data)):
-            cv2.imwrite('train_%s_%s.jpg'%(i,x),X_data[x])
+            cv2.imwrite('test_%s_%s.jpg'%(i,x),X_data[x])
         print X_data.shape
         print Y_data.shape
     #
