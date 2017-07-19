@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
-import sys
-sys.path.append("..")
+# import sys
+# sys.path.append("..")
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,8 +10,7 @@ from torch import optim
 from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
 from dog_config import *
-from utils import data_loader
-from utils.data_loader import data_loader_
+import utils.data_loader
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
 from load_image import load_data
@@ -43,7 +42,7 @@ def adjust_learning_rate(optimizer, epoch):
 
 def main():
     torch.manual_seed(42)
-    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=False,data_size=224,nb_classes=100)
+    data_l = data_loader.data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=False,data_size=224,nb_classes=100)
     # print 'loading....'
     # trX = np.load('bddog/trX.npy')
     # trY = np.load('bddog/trY.npy')
