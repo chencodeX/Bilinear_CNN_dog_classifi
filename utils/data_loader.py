@@ -1,11 +1,14 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("..")
 import pickle
 import random
 import cv2
+import os
 import numpy as np
 from data_augmentation import data_augmentation_img
-
+from bdgod.dog_config import *
 
 class data_loader(object):
     def __init__(self, batch_size, proportion=0.8, shuffle=True, data_add=4, onehot=True,data_size =224,nb_classes = 100):
@@ -31,6 +34,9 @@ class data_loader(object):
         # print pic_data
         pic_data = pic_data.items()
         random.shuffle(pic_data)
+
+        dog_key = os.listdir(Image_Path)
+        key_map = {dog_key[x]: x for x in range(100)}
         file_d.close()
         # print pic_data
         return pic_data
