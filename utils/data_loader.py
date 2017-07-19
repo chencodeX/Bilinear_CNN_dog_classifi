@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
-import sys
-sys.path.append("..")
+# import sys
+# sys.path.append("..")
 import pickle
 import random
 import cv2
