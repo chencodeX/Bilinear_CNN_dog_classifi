@@ -163,7 +163,7 @@ def main():
             optimizer =optimizer_s
 
 
-        num_batches_train = data_l.test_length / mini_batch_size
+        num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
         for k in range(num_batches_train):
             batch_train_data_X,batch_train_data_Y = data_l.get_train_data()
