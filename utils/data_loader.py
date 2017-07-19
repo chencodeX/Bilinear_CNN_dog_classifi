@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("..")
+sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
 import pickle
 import random
 import cv2
