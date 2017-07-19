@@ -1,7 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
 import sys
-# sys.path.append("..")
+sys.path.append("../")
 print sys.path
 import numpy as np
 import torch
