@@ -7,7 +7,7 @@ import random
 import cv2
 import os
 import numpy as np
-from data_augmentation import data_augmentation_img
+from bdgod.data_augmentation import data_augmentation_img
 from bdgod.dog_config import *
 
 class data_loader(object):
