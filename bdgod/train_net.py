@@ -43,7 +43,7 @@ def adjust_learning_rate(optimizer, epoch):
 
 
 def main():
-    torch.manual_seed(42)
+    torch.manual_seed(23)
     data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=224,nb_classes=100)
     # print 'loading....'
     # trX = np.load('bddog/trX.npy')
