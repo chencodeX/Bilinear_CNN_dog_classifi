@@ -44,7 +44,7 @@ def adjust_learning_rate(optimizer, epoch):
 
 def main():
     torch.manual_seed(42)
-    data_l = data_loader_(batch_size=128,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=224,nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=224,nb_classes=100)
     # print 'loading....'
     # trX = np.load('bddog/trX.npy')
     # trY = np.load('bddog/trY.npy')
@@ -200,6 +200,24 @@ def main():
 
                 print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
                 torch.save(model, 'models/resnet_model_pretrained_%s_%s_%s_7.pkl' % ('adam', str(e), str(k)))
+        acc = 0.0
+        num_batches_test = data_l.test_length / batch_size
+        for j in range(num_batches_test):
+            teX,teY = data_l.get_test_data()
+            teX = teX.transpose(0, 3, 1, 2)
+            teX[:, 0, ...] -= MEAN_VALUE[0]
+            teX[:, 1, ...] -= MEAN_VALUE[1]
+            teX[:, 2, ...] -= MEAN_VALUE[2]
+            teX = torch.from_numpy(teX).float()
+            # teY = torch.from_numpy(teY).long()
+            predY = predict(model,teX)
+            # print predY.dtype
+            # print teY[start:end]
+            acc+=1.*np.mean(predY==teY)
+            # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
+
+        print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
+        torch.save(model, 'models/resnet_model_pretrained_%s_%s_7.pkl' % ('adam', str(e)))
     print 'train over'
 
 
