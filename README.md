@@ -2,10 +2,10 @@
 
 
 关于BCNN ,理论参考文献http://vis-www.cs.umass.edu/bcnn/docs/bcnn_iccv15.pdf 在项目中，先训练了全连接层的参数并保存下来，然后在微调整个模型
-bcnn_DD_woft.py  训练全连接层
-bcnn_finetuning.py  微调整个网络
-bcnn_finetuning_predict.py   预测测试样本（百度流浪狗）
-down_pic.py  处理数据的脚本
+    bcnn_DD_woft.py  训练全连接层
+    bcnn_finetuning.py  微调整个网络
+    bcnn_finetuning_predict.py   预测测试样本（百度流浪狗）
+    down_pic.py  处理数据的脚本
 
 
     utils/create_h5_dataset.py  创建h5数据集  本文一开始使用这种数据格式
