@@ -8,19 +8,18 @@ bcnn_finetuning_predict.py   预测测试样本（百度流浪狗）
 down_pic.py  处理数据的脚本
 
 
-utils/create_h5_dataset.py  创建h5数据集  本文一开始使用这种数据格式
-
- 	data_loader.py  一个动态的数据加载工具，可以完成目标检测的提取，使用较少的内存空间。并可进行数据扩增
- 	utils_.py  工具类
+    utils/create_h5_dataset.py  创建h5数据集  本文一开始使用这种数据格式
+          data_loader.py  一个动态的数据加载工具，可以完成目标检测的提取，使用较少的内存空间。并可进行数据扩增
+          utils_.py  工具类
 
 
 bdgod  本目录为pytorch实现的vgg和resnet模型，支持预训练
 
     bdgod/data_augmentation.py   数据增广文件
-        dog_config.py   配置文件
-        load_image.py   旧的数据处理工具
-        misc.py         预训练模型参数加载工具
-        predict_dog.py   预测功能
-        resnet.py        定义resnet网络结构
-        train_net.py     训练网络
-        vggnet.py        定义vgg网络结构
+          dog_config.py   配置文件
+          load_image.py   旧的数据处理工具
+          misc.py         预训练模型参数加载工具
+          predict_dog.py   预测功能
+          resnet.py        定义resnet网络结构
+          train_net.py     训练网络
+          vggnet.py        定义vgg网络结构
