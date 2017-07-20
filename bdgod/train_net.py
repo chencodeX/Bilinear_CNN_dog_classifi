@@ -136,16 +136,16 @@ def main():
     # optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
     #                         {'params':model.group2.parameters()}
     #                         ],lr=(1e-04),eps=1e-08, betas=(0.9, 0.999), weight_decay=0.0005)
-    optimizer_a = optim.Adam([{'params':model.group2.parameters()}
-                            ],lr=(1e-04))
+    # optimizer_a = optim.Adam([{'params':model.group2.parameters()}
+    #                         ],lr=(1e-04))
 
     optimizer_s = optim.SGD([{'params':model.layer4[1].parameters()},
                              {'params':model.layer4[2].parameters()},
                             {'params':model.group2.parameters()}
-                            ],lr=(1e-05),momentum=0.9,weight_decay=0.0005)
-    optimizer = optimizer_a
-    optimizer.lr = (1e-04)
-    print optimizer.lr
+                            ],lr=(1e-04),momentum=0.9,weight_decay=0.0005)
+    optimizer = optimizer_s
+    # optimizer.lr = (1e-04)
+    # print optimizer.lr
     # print optimizer.momentum
     for param_group in optimizer.param_groups:
         print param_group['lr']
@@ -161,7 +161,8 @@ def main():
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
         elif e==5:
-            optimizer =optimizer_s
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = param_group['lr'] * 0.1
 
 
         num_batches_train = data_l.train_length / mini_batch_size
