@@ -143,11 +143,11 @@ def data_augmentation_img(raw_img, data_size=224):
     else:
         fs = fs_2
     # 随机切割
-    cc = transforms.CenterCrop(int(min_l * 0.8))
+    cc = transforms.CenterCrop(int(min_l * 0.9))
     sq_1 = cc(raw_img)
     sq_1 = sq_1.resize((data_size, data_size))
     sq_1 = np.asarray(sq_1)
-    rc = transforms.RandomCrop(int(min_l * 0.8))
+    rc = transforms.RandomCrop(int(min_l * 0.9))
     sq_2 = rc(raw_img)
     sq_2 = sq_2.resize((data_size, data_size))
     sq_2 = np.asarray(sq_2)

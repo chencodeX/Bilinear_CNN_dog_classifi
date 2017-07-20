@@ -79,8 +79,8 @@ class data_loader_(object):
             point_value = image_points[point_index]
             img_temp = cv2.imread(image_path)
             img_temp_arr = np.array(img_temp)
-            rad_width = (point_value[2] - point_value[0]) / 5
-            rad_hight = (point_value[3] - point_value[1]) / 5
+            rad_width = (point_value[2] - point_value[0]) / 10
+            rad_hight = (point_value[3] - point_value[1]) / 10
             point_value[0] = point_value[0] + random.randint(0, rad_width) - (rad_width / 2)
             if point_value[0]<0:
                 point_value[0]=0
