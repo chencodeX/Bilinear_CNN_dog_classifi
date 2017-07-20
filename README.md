@@ -16,11 +16,11 @@ utils/create_h5_dataset.py  创建h5数据集  本文一开始使用这种数据
 
 bdgod  本目录为pytorch实现的vgg和resnet模型，支持预训练
 
-bdgod/data_augmentation.py   数据增广文件
- 	dog_config.py   配置文件
- 	load_image.py   旧的数据处理工具
- 	misc.py         预训练模型参数加载工具
- 	predict_dog.py   预测功能
- 	resnet.py        定义resnet网络结构
- 	train_net.py     训练网络
- 	vggnet.py        定义vgg网络结构
+    bdgod/data_augmentation.py   数据增广文件
+        dog_config.py   配置文件
+        load_image.py   旧的数据处理工具
+        misc.py         预训练模型参数加载工具
+        predict_dog.py   预测功能
+        resnet.py        定义resnet网络结构
+        train_net.py     训练网络
+        vggnet.py        定义vgg网络结构
