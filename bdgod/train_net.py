@@ -25,7 +25,11 @@ def train(model, loss, optimizer, x_val, y_val):
     y = Variable(y_val.cuda(), requires_grad=False)
     optimizer.zero_grad()
     fx = model.forward(x)
-    output = loss.forward(fx, y)
+    #inecption 网络特有
+    if type(fx) == tuple:
+        output = loss.forward(fx[0], y)
+    else:
+        output = loss.forward(fx, y)
     output.backward()
     optimizer.step()
     return output.cuda().data[0]
