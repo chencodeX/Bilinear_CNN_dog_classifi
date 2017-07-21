@@ -215,7 +215,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
 
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
-        torch.save(model, 'models/resnet_model_pretrained_%s_%s_7.pkl' % ('adam', str(e)))
+        torch.save(model, 'models/inception_model_pretrained_%s_%s_7.pkl' % ('adam', str(e)))
     print 'train over'
 
 
