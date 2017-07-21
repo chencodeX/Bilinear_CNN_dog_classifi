@@ -113,11 +113,16 @@ class data_loader_(object):
             label = self.key_map[label]
             labels = [int(label)]
             all_labels += labels
-            img_temp = cv2.imread(image_path)
-            img_temp = cv2.resize(img_temp,(self.data_size,self.data_size))
-            img_temp_arr = np.array([img_temp])
 
-            result = np.concatenate((result, img_temp_arr), axis=0)
+            image_points = data_temp[1]
+            point_index = random.randint(1, len(image_points)) - 1
+            point_value = image_points[point_index]
+
+            img_temp = cv2.imread(image_path)
+            img_temp_arr = np.array([img_temp])
+            corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
+            corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
+            result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
             targets = np.array(all_labels).reshape(-1)
             all_labels = np.eye(self.nb_classes)[targets]
