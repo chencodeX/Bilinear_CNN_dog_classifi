@@ -10,6 +10,7 @@ from torch.autograd import Variable
 from torch import optim
 from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
+from inception import inception_v3
 from dog_config import *
 from utils import data_loader
 from utils.data_loader import data_loader_
@@ -44,7 +45,7 @@ def adjust_learning_rate(optimizer, epoch):
 
 def main():
     torch.manual_seed(23)
-    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=224,nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=299,nb_classes=100)
     # print 'loading....'
     # trX = np.load('bddog/trX.npy')
     # trY = np.load('bddog/trY.npy')
@@ -63,7 +64,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = resnet101(pretrained=True, model_root=Model_Root)
+    model = inception_v3(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
@@ -118,7 +119,7 @@ def main():
     #     print '****'
     #     print(module)
     # resnet50 FC层
-    model.group2 = nn.Sequential(
+    model.group1 = nn.Sequential(
         OrderedDict([
             ('fc', nn.Linear(2048, 100))
         ])
@@ -139,9 +140,7 @@ def main():
     # optimizer_a = optim.Adam([{'params':model.group2.parameters()}
     #                         ],lr=(1e-04))
 
-    optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
-                            {'params':model.group2.parameters()}
-                            ],lr=(1e-04))
+    optimizer = optim.Adam(model.group1.parameters(),lr=(1e-04))
 
     # optimizer.lr = (1e-04)
     # print optimizer.lr
@@ -159,9 +158,9 @@ def main():
         if e==8:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
-        elif e==4:
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = param_group['lr'] * 0.1
+        # elif e==4:
+        #     for param_group in optimizer.param_groups:
+        #         param_group['lr'] = param_group['lr'] * 0.1
 
 
         num_batches_train = data_l.train_length / mini_batch_size
@@ -198,7 +197,7 @@ def main():
                     # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
 
                 print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
-                torch.save(model, 'models/resnet_model_pretrained_%s_%s_%s_7.pkl' % ('adam', str(e), str(k)))
+                torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('adam', str(e), str(k)))
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
         for j in range(num_batches_test):
