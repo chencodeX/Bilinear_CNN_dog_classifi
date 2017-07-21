@@ -145,22 +145,22 @@ def main():
     # optimizer_a = optim.Adam([{'params':model.group2.parameters()}
     #                         ],lr=(1e-04))
 
-    optimizer = optim.Adam(model.group1.parameters(),lr=(1e-04))
+    # optimizer = optim.Adam(model.group1.parameters(),lr=(1e-04))
 
     # optimizer.lr = (1e-04)
     # print optimizer.lr
     # print optimizer.momentum
-    for param_group in optimizer.param_groups:
-        print param_group['lr']
+    # for param_group in optimizer.param_groups:
+    #     print param_group['lr']
     # 全局优化
-    # optimizer = optim.Adam(model.parameters(),lr=(1e-04),eps=1e-08,betas=(0.9, 0.999),weight_decay =0.0005)
+    optimizer = optim.Adam(model.parameters(),lr=(1e-03),eps=1e-08,betas=(0.9, 0.999),weight_decay =0.0005)
     batch_size = data_l.batch_szie
     data_aug_num = data_l.data_add
     mini_batch_size = batch_size/data_aug_num
     epochs = 1000
     for e in range(epochs):
         cost = 0.0
-        if e==8:
+        if e==6:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
         # elif e==4:
