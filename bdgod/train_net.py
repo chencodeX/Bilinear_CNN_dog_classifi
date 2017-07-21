@@ -38,8 +38,9 @@ def train(model, loss, optimizer, x_val, y_val):
 def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
+    if type(output) == tuple:
+        return output[0].cpu().data.numpy().argmax(axis=1)
     return output.cpu().data.numpy().argmax(axis=1)
-
 
 def adjust_learning_rate(optimizer, epoch):
     lr = optimizer.lr  /10
@@ -184,6 +185,7 @@ def main():
             if (k+1) % 20 ==0:
                 print 'all average train loss is : %f' % (cost / (k+1))
             if (k+1) %100 == 0:
+                model.training = False
                 acc = 0.0
                 num_batches_test = data_l.test_length / batch_size
                 for j in range(num_batches_test):
@@ -199,9 +201,10 @@ def main():
                     # print teY[start:end]
                     acc+=1.*np.mean(predY==teY)
                     # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
-
+                model.training = True
                 print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
                 torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('adam', str(e), str(k)))
+        model.training = False
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
         for j in range(num_batches_test):
@@ -217,7 +220,7 @@ def main():
             # print teY[start:end]
             acc+=1.*np.mean(predY==teY)
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
-
+        model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
         torch.save(model, 'models/inception_model_pretrained_%s_%s_7.pkl' % ('adam', str(e)))
     print 'train over'

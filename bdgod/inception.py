@@ -119,7 +119,7 @@ class Inception3(nn.Module):
         x = F.dropout(x, training=self.training)
         # 1 x 1 x 2048
         x = x.view(x.size(0), -1)
-        future =x.clone()
+        future = x.clone()
         # 2048
         x = self.group1(x)
         # 1000 (num_classes)
