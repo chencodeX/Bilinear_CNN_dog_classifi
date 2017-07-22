@@ -12,7 +12,7 @@ print model
 for p in model.parameters():
     print p.size()
 
-state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet50-19c8e357.pth', Model_Root)
+state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet101-5d3b4d8f.pth', Model_Root)
 for name, param in state_dict.items():
     print name
     print param.size()
