@@ -6,4 +6,4 @@ import torch
 from torch.autograd import Variable
 
 
-model = torch.load('models/better1.pkl.pkl')
+model = torch.load('models/better1.pkl')
