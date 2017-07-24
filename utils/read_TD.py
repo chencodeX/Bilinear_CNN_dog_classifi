@@ -8,7 +8,7 @@ import pickle
 Image_Path = '/mnt/git/data/all_img'
 def read_txt():
     all_pic_infs = {}
-    inf = open('det_res.txt', 'rb')
+    inf = open('all_det.txt', 'rb')
     lines = inf.readlines()  # 读取全部内容
     for line in lines:
         line = line.strip('\r\n')
