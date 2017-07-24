@@ -120,11 +120,13 @@ class data_loader_(object):
             point_value = image_points[point_index]
 
             img_temp = cv2.imread(image_path)
-            img_temp_arr = np.array([img_temp])
+            img_temp_arr = np.array(img_temp)
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
             print corp_img.shape
             print self.data_size
             corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
+            corp_img = corp_img[np.newaxis,...]
+            print corp_img.shape
             result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
             targets = np.array(all_labels).reshape(-1)
