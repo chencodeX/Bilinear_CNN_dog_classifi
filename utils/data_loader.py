@@ -146,8 +146,8 @@ if __name__ == '__main__':
         # print X_data.shape
         # print Y_data.shape
         X_data,Y_data = dl.get_test_data()
-        for x in range(len(X_data)):
-            cv2.imwrite('test_%s_%s.jpg'%(i,x),X_data[x])
+        # for x in range(len(X_data)):
+        #     cv2.imwrite('test_%s_%s.jpg'%(i,x),X_data[x])
         print X_data.shape
         print Y_data.shape
     #
