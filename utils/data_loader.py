@@ -122,6 +122,8 @@ class data_loader_(object):
             img_temp = cv2.imread(image_path)
             img_temp_arr = np.array([img_temp])
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
+            print corp_img.shape
+            print self.data_size
             corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
             result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
@@ -138,11 +140,11 @@ class data_loader_(object):
 if __name__ == '__main__':
     dl = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=100)
     for i in range(3):
-        X_data,Y_data = dl.get_train_data()
-        for x in range(len(X_data)):
-            cv2.imwrite('train_%s_%s.jpg'%(i,x),X_data[x])
-        print X_data.shape
-        print Y_data.shape
+        # X_data,Y_data = dl.get_train_data()
+        # for x in range(len(X_data)):
+        #     cv2.imwrite('train_%s_%s.jpg'%(i,x),X_data[x])
+        # print X_data.shape
+        # print Y_data.shape
         X_data,Y_data = dl.get_test_data()
         for x in range(len(X_data)):
             cv2.imwrite('test_%s_%s.jpg'%(i,x),X_data[x])
