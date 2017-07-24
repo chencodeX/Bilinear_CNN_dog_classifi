@@ -118,7 +118,10 @@ class data_loader_(object):
             image_points = data_temp[1]
             point_index = random.randint(1, len(image_points)) - 1
             point_value = image_points[point_index]
-
+            if point_value[0]<0:
+                point_value[0]=0
+            if point_value[1]<0:
+                point_value[1]=0
             img_temp = cv2.imread(image_path)
             img_temp_arr = np.array(img_temp)
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
