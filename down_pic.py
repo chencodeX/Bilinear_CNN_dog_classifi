@@ -20,7 +20,7 @@ class DownloadPic(object):
 
     def __init__(self):
         self.document_path=''
-        self.save_path = '/mnt/git/data/test1'
+        self.save_path = '/home/yuexibin/bddog/imgdata/train'
         self.table_name = ''
         self.start_index = 0
         self.root_path = os.getcwd()
@@ -42,17 +42,17 @@ class DownloadPic(object):
 
 
     def load_urls(self):
-        root_dir = '/mnt/git/data/all_img'
+        root_dir = '/home/yuexibin/bddog/imgdata/all_img'
         dog_keys = {}
         down_tasks = []
-        inf = open('val.txt','rb')
+        inf = open('data_train.txt','rb')
         lines = inf.readlines()  # 读取全部内容
         for line in lines:
             line = line.strip('\r\n')
             key_value = line.split(' ')
             print key_value
             if not dog_keys.has_key(key_value[1]):
-                dog_keys[key_value[1]]=100
+                dog_keys[key_value[1]]=0
             save_dir = key_value[1]
             save_dir = os.path.join(root_dir,save_dir)
             touch_dir(save_dir)
