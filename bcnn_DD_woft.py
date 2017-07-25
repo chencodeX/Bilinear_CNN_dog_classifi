@@ -346,7 +346,7 @@ if __name__ == '__main__':
                 if v in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES):
                     print('Printing Trainable Variables :', sess.run(v).shape)
                     last_layer_weights.append(sess.run(v))
-            np.savez('last_layers_epoch_15_448.npz',last_layer_weights)
+            np.savez('last_layers_epoch_10.npz',last_layer_weights)
             print("Last layer weights saved")
             break
 
