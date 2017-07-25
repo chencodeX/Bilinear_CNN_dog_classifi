@@ -279,7 +279,7 @@ if __name__ == '__main__':
     # X_val, Y_val = shuffle(X_val, Y_val)
     # #print Y_train[0]
     # print("Device placement on. Creating Session")
-    data_l = data_loader_(batch_size=16, proportion=0.85, shuffle=True, data_add=2, onehot=True, data_size=448,
+    data_l = data_loader_(batch_size=32, proportion=0.85, shuffle=True, data_add=2, onehot=True, data_size=448,
                           nb_classes=100)
     #sess = tf.Session(config=tf.ConfigProto(log_device_placement=False))
     sess = tf.Session()
