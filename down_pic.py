@@ -45,7 +45,7 @@ class DownloadPic(object):
         root_dir = '/home/yuexibin/bddog/imgdata/all_img'
         dog_keys = {}
         down_tasks = []
-        inf = open('.txt','rb')
+        inf = open('val.txt','rb')
         lines = inf.readlines()  # 读取全部内容
         for line in lines:
             line = line.strip('\r\n')
