@@ -357,7 +357,7 @@ if __name__ == '__main__':
         for i in range(total_train_count):
 
             batch_xs, batch_ys = data_l.get_train_data()
-            batch_xs = random_flip_right_to_left(batch_xs)
+            # batch_xs = random_flip_right_to_left(batch_xs)
             print (batch_xs.shape)
             print (batch_ys.shape)
             start = time.time()
