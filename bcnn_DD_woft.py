@@ -11,7 +11,7 @@ Only blinear layers are trained in this first step.
 # from __future__ import print_function
 import tensorflow as tf
 import numpy as np
-from tflearn.data_utils import shuffle
+# from tflearn.data_utils import shuffle
 from utils.data_loader import data_loader_
 import h5py
 import math
