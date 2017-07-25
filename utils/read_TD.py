@@ -5,7 +5,7 @@
 import cv2
 import pickle
 
-Image_Path = '/mnt/git/data/all_img'
+Image_Path = '/home/yuexibin/bddog/imgdata/all_img'
 def read_txt():
     all_pic_infs = {}
     inf = open('all_det.txt', 'rb')
