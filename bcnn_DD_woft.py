@@ -301,7 +301,7 @@ if __name__ == '__main__':
     learning_rate_wft = tf.placeholder(tf.float32, shape=[])
     learning_rate_woft = tf.placeholder(tf.float32, shape=[])
 
-    optimizer = tf.train.MomentumOptimizer(learning_rate=0.9, momentum=0.9).minimize(loss)
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.9).minimize(loss)
 
 
     correct_prediction = tf.equal(tf.argmax(vgg.fc3l,1), tf.argmax(target,1))
@@ -320,7 +320,7 @@ if __name__ == '__main__':
 
     lr = 0.9
     base_lr = 1.0
-    break_training_epoch = 10
+    break_training_epoch = 15
     finetune_step = 50
     for epoch in range(100):
         # total_batch = int(13096/batch_size)
@@ -346,7 +346,7 @@ if __name__ == '__main__':
                 if v in tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES):
                     print('Printing Trainable Variables :', sess.run(v).shape)
                     last_layer_weights.append(sess.run(v))
-            np.savez('last_layers_epoch_10.npz',last_layer_weights)
+            np.savez('last_layers_epoch_15.npz',last_layer_weights)
             print("Last layer weights saved")
             break
 
