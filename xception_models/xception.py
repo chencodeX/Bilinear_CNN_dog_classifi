@@ -27,7 +27,7 @@ OPTIMIZATION CONFIGURATION (for Google JFT Dataset):
 def xception(inputs,
              num_classes=1001,
              is_training=True,
-             scope='xception'):
+             scope='xception_models'):
     '''
     The Xception Model!
 
@@ -146,13 +146,13 @@ def xception_arg_scope(weight_decay=0.00001,
                        batch_norm_decay=0.9997,
                        batch_norm_epsilon=0.001):
     '''
-    The arg scope for xception model. The weight decay is 1e-5 as seen in the paper.
+    The arg scope for xception_models model. The weight decay is 1e-5 as seen in the paper.
     INPUTS:
     - weight_decay(float): the weight decay for weights variables in conv2d and separable conv2d
     - batch_norm_decay(float): decay for the moving average of batch_norm momentums.
     - batch_norm_epsilon(float): small float added to variance to avoid dividing by zero.
     OUTPUTS:
-    - scope(arg_scope): a tf-slim arg_scope with the parameters needed for xception.
+    - scope(arg_scope): a tf-slim arg_scope with the parameters needed for xception_models.
     '''
     # Set weight_decay for weights in conv2d and separable_conv2d layers.
     with slim.arg_scope([slim.conv2d, slim.separable_conv2d],
