@@ -1,6 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
 import sys
+
 sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
 print sys.path
 import numpy as np
@@ -13,7 +14,7 @@ from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
 from utils import data_loader
-from utils.data_loader import data_loader_
+from utils.cv_data_loder import data_loader_
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
 from load_image import load_data
@@ -25,14 +26,18 @@ def train(model, loss, optimizer, x_val, y_val):
     y = Variable(y_val.cuda(), requires_grad=False)
     optimizer.zero_grad()
     fx = model.forward(x)
-    #inecption 网络特有
+    # inecption 网络特有
     if type(fx) == tuple:
+        t_y = fx[0].cpu().data.numpy().argmax(axis=1)
+        acc = 1. * np.mean(t_y == y_val.numpy())
         output = loss.forward(fx[0], y)
     else:
+        t_y = fx.cpu().data.numpy().argmax(axis=1)
+        acc = 1. * np.mean(t_y == y_val.numpy())
         output = loss.forward(fx, y)
     output.backward()
     optimizer.step()
-    return output.cuda().data[0]
+    return output.cuda().data[0], acc
 
 
 def predict(model, x_val):
@@ -42,15 +47,19 @@ def predict(model, x_val):
         return output[0].cpu().data.numpy().argmax(axis=1)
     return output.cpu().data.numpy().argmax(axis=1)
 
+
 def adjust_learning_rate(optimizer, epoch):
-    lr = optimizer.lr  /10
+    lr = optimizer.lr / 10
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
 
 def main():
     torch.manual_seed(23)
-    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=False,data_size=299,nb_classes=100)
+    Band_num = 1
+    Tag_id = 0
+    data_l = data_loader_(batch_size=64, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=2, onehot=False,
+                          data_size=299, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
@@ -155,14 +164,15 @@ def main():
     # for param_group in optimizer.param_groups:
     #     print param_group['lr']
     # 全局优化
-    optimizer = optim.SGD(model.parameters(),lr=(1e-04),momentum=0.9,weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr=(1e-04), momentum=0.9, weight_decay=0.0005)
     batch_size = data_l.batch_szie
     data_aug_num = data_l.data_add
-    mini_batch_size = batch_size/data_aug_num
+    mini_batch_size = batch_size / data_aug_num
     epochs = 1000
     for e in range(epochs):
         cost = 0.0
-        if e==5:
+        train_acc = 0.0
+        if e == 8:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
         # elif e==4:
@@ -173,58 +183,63 @@ def main():
         num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
         for k in range(num_batches_train):
-            batch_train_data_X,batch_train_data_Y = data_l.get_train_data()
+            batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
             batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
             batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
             batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
-            cost_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
-            cost +=cost_temp
-            if (k+1) % 10 ==0:
+            cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
+            train_acc += acc_temp
+            cost += cost_temp
+            if (k + 1) % 10 == 0:
                 print 'now step train loss is : %f' % (cost_temp)
-            if (k+1) % 20 ==0:
-                print 'all average train loss is : %f' % (cost / (k+1))
-            if (k+1) %100 == 0:
+                print 'now step train acc is : %f' % (acc_temp)
+            if (k + 1) % 20 == 0:
+                print 'all average train loss is : %f' % (cost / (k + 1))
+                print 'all average train acc is : %f' % (train_acc / (k + 1))
+            if (k + 1) % 100 == 0:
                 model.training = False
                 acc = 0.0
                 num_batches_test = data_l.test_length / batch_size
                 for j in range(num_batches_test):
-                    teX,teY = data_l.get_test_data()
+                    teX, teY = data_l.get_test_data()
                     teX = teX.transpose(0, 3, 1, 2)
                     teX[:, 0, ...] -= MEAN_VALUE[0]
                     teX[:, 1, ...] -= MEAN_VALUE[1]
                     teX[:, 2, ...] -= MEAN_VALUE[2]
                     teX = torch.from_numpy(teX).float()
                     # teY = torch.from_numpy(teY).long()
-                    predY = predict(model,teX)
+                    predY = predict(model, teX)
                     # print predY.dtype
                     # print teY[start:end]
-                    acc+=1.*np.mean(predY==teY)
+                    acc += 1. * np.mean(predY == teY)
                     # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
                 model.training = True
-                print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
-                torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('adam', str(e), str(k)))
+                print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
+                torch.save(model, 'models/inception_model_pretrained_band%d_tag%d_%s_%s_%s_1.pkl' % (
+                Band_num, Tag_id, 'SGD', str(e), str(k)))
         model.training = False
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
         for j in range(num_batches_test):
-            teX,teY = data_l.get_test_data()
+            teX, teY = data_l.get_test_data()
             teX = teX.transpose(0, 3, 1, 2)
             teX[:, 0, ...] -= MEAN_VALUE[0]
             teX[:, 1, ...] -= MEAN_VALUE[1]
             teX[:, 2, ...] -= MEAN_VALUE[2]
             teX = torch.from_numpy(teX).float()
             # teY = torch.from_numpy(teY).long()
-            predY = predict(model,teX)
+            predY = predict(model, teX)
             # print predY.dtype
             # print teY[start:end]
-            acc+=1.*np.mean(predY==teY)
+            acc += 1. * np.mean(predY == teY)
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         model.training = True
-        print 'Epoch %d ,Step %d, all test acc is : %f' % (e,k,acc / num_batches_test)
-        torch.save(model, 'models/inception_model_pretrained_%s_%s_7.pkl' % ('adam', str(e)))
+        print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
+        torch.save(model, 'models/inception_model_pretrained_band%d_tag%d_%s_%s_%s_1.pkl' % (
+            Band_num, Tag_id, 'SGD', str(e), str(k)))
     print 'train over'
 
 
