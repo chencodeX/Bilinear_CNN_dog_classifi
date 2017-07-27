@@ -326,7 +326,7 @@ if __name__ == '__main__':
     print([_.name for _ in vgg.parameters])
 
 
-    optimizer = tf.train.MomentumOptimizer(learning_rate=0.001, momentum=0.9).minimize(loss)
+    optimizer = tf.train.MomentumOptimizer(learning_rate=0.0003, momentum=0.9).minimize(loss)
     
     check_op = tf.add_check_numerics_ops()
 
