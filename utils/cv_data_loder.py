@@ -10,7 +10,7 @@ import cv2
 import os
 import numpy as np
 from bdgod.dog_config import *
-from bdgod.data_augmentation import data_augmentation_img
+from bdgod.data_augmentation import data_augmentation_img_tag
 
 
 class data_loader_(object):
@@ -19,6 +19,7 @@ class data_loader_(object):
                  nb_classes=100):
         self.batch_szie = batch_size
         self.shuffle = shuffle
+        self.tag_id = tag_id
         self.key_file_name = 'pkls/all_pic_infs_%d_%d.pkl' % (band_num, tag_id)
         self.train_data,self.test_data= self.load_keys()
         # print self.all_pic_inf,
@@ -97,7 +98,7 @@ class data_loader_(object):
                 point_value[1] = 0
             point_value[3] = point_value[3] + random.randint(0, rad_hight) - (rad_hight / 2)
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
-            all_imgs = data_augmentation_img(corp_img, data_size=self.data_size)
+            all_imgs = data_augmentation_img_tag(corp_img, data_size=self.data_size,tag=self.tag_id)
             all_imgs = all_imgs[:self.data_add]
             assert len(all_imgs) == self.data_add
             result = np.concatenate((result, all_imgs), axis=0)
