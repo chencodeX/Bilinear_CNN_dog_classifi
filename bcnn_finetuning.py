@@ -403,7 +403,7 @@ if __name__ == '__main__':
                     print("Fine tuning all BCNN_DD")
 
                 print("Epoch:", '%03d' % (epoch+1), "Step:", '%03d' % i ,"Loss:", str(cost))
-                print("Epoch:", '%03d' % (epoch + 1), "Step:", '%03d' % i, "AVG_Loss:", str(avg_cost))
+                print("Epoch:", '%03d' % (epoch + 1), "Step:", '%03d' % i, "AVG_Loss:", str(avg_cost/(i+1)))
                 print("Training Accuracy -->", accuracy.eval(feed_dict={imgs: batch_xs, target: batch_ys}, session=sess))
                 #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
 
