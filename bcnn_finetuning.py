@@ -408,7 +408,7 @@ if __name__ == '__main__':
                 #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
 
 
-        val_batch_size = data_l.batch_sziei
+        val_batch_size = data_l.batch_szie
         total_val_count = data_l.test_length
         correct_val_count = 0.0
         val_loss = 0.0
