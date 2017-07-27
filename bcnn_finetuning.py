@@ -429,7 +429,7 @@ if __name__ == '__main__':
         print("Validation Data Accuracy -->", 100.0 * correct_val_count / (1.0 * total_val_count))
         print("##############################")
 
-        checkpoint_path = os.path.join(os.getcwd(), 'model%s' % str(epoch)+'_'+str(batch_step))
+        checkpoint_path = os.path.join(os.getcwd(), 'model_tf%s' % str(epoch))
         touch_dir(checkpoint_path)
         checkpoint_path = os.path.join(checkpoint_path, 'model.ckpt')
         saver.save(sess, checkpoint_path)
