@@ -14,3 +14,4 @@ from bdgod.data_augmentation import data_augmentation_img
 class data_loader_(object):
     def __init__(self, batch_size, proportion=0.8, shuffle=True, data_add=4, onehot=True, data_size=224,
                  nb_classes=100):
+        pass
