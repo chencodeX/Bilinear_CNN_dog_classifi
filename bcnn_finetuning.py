@@ -382,59 +382,58 @@ if __name__ == '__main__':
     for epoch in range(100):
         avg_cost = 0.
 
-        batch_step = 0
         total_test_count = data_l.train_length/(data_l.batch_szie/data_l.data_add)
         for i in range(total_test_count):
-            batch_step += 1
             batch_xs, batch_ys = data_l.get_train_data()
             print (batch_xs.shape)
             print (batch_ys.shape)
             start = time.time()
             sess.run([optimizer,check_op], feed_dict={imgs: batch_xs, target: batch_ys})
-            if batch_step%20==0:
+            if i%20==0:
                 print('Full BCNN finetuning, time to run optimizer for batch size 8:',time.time()-start,'seconds')
 
 
             cost = sess.run(loss, feed_dict={imgs: batch_xs, target: batch_ys})
-
-            if batch_step % 20 == 0:
+            avg_cost +=cost
+            if i % 20 == 0:
                 print ('Learning rate: ', (str(lr)))
                 if epoch <= finetune_step:
                     print("Training last layer of BCNN_DD")
                 else:
                     print("Fine tuning all BCNN_DD")
 
-                print("Epoch:", '%03d' % (epoch+1), "Step:", '%03d' % batch_step,"Loss:", str(cost))
+                print("Epoch:", '%03d' % (epoch+1), "Step:", '%03d' % i ,"Loss:", str(cost))
+                print("Epoch:", '%03d' % (epoch + 1), "Step:", '%03d' % i, "AVG_Loss:", str(avg_cost))
                 print("Training Accuracy -->", accuracy.eval(feed_dict={imgs: batch_xs, target: batch_ys}, session=sess))
                 #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
 
-            if batch_step % 400 == 0:
-                val_batch_size = data_l.batch_szie
-                total_val_count = data_l.test_length
-                correct_val_count = 0.0
-                val_loss = 0.0
-                total_val_batch = int(total_val_count / val_batch_size)
 
-                for j in range(total_val_batch):
-                    batch_val_x, batch_val_y = data_l.get_test_data()
-                    print(batch_val_x.shape)
-                    print(batch_val_y.shape)
-                    val_loss += sess.run(loss, feed_dict={imgs: batch_val_x, target: batch_val_y})
+        val_batch_size = data_l.batch_sziei
+        total_val_count = data_l.test_length
+        correct_val_count = 0.0
+        val_loss = 0.0
+        total_val_batch = int(total_val_count / val_batch_size)
 
-                    pred = sess.run(num_correct_preds, feed_dict={imgs: batch_val_x, target: batch_val_y})
-                    correct_val_count += pred
+        for j in range(total_val_batch):
+            batch_val_x, batch_val_y = data_l.get_test_data()
+            print(batch_val_x.shape)
+            print(batch_val_y.shape)
+            val_loss += sess.run(loss, feed_dict={imgs: batch_val_x, target: batch_val_y})
 
-                print("##############################")
-                print("Validation Loss -->", val_loss)
-                print("correct_val_count, total_val_count", correct_val_count, total_val_count)
-                print("Validation Data Accuracy -->", 100.0 * correct_val_count / (1.0 * total_val_count))
-                print("##############################")
+            pred = sess.run(num_correct_preds, feed_dict={imgs: batch_val_x, target: batch_val_y})
+            correct_val_count += pred
 
-                checkpoint_path = os.path.join(os.getcwd(), 'model%s' % str(epoch)+'_'+str(batch_step))
-                touch_dir(checkpoint_path)
-                checkpoint_path = os.path.join(checkpoint_path, 'model.ckpt')
-                saver.save(sess, checkpoint_path)
-                print("saved to " + checkpoint_path)
+        print("##############################")
+        print("Validation Loss -->", val_loss)
+        print("correct_val_count, total_val_count", correct_val_count, total_val_count)
+        print("Validation Data Accuracy -->", 100.0 * correct_val_count / (1.0 * total_val_count))
+        print("##############################")
+
+        checkpoint_path = os.path.join(os.getcwd(), 'model%s' % str(epoch)+'_'+str(batch_step))
+        touch_dir(checkpoint_path)
+        checkpoint_path = os.path.join(checkpoint_path, 'model.ckpt')
+        saver.save(sess, checkpoint_path)
+        print("saved to " + checkpoint_path)
 
 
         if epoch>40:
