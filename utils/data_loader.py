@@ -131,7 +131,7 @@ class data_loader_(object):
             # print self.data_size
             corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
             corp_img = corp_img[np.newaxis,...]
-            print corp_img.shape
+            # print corp_img.shape
             result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
             targets = np.array(all_labels).reshape(-1)
