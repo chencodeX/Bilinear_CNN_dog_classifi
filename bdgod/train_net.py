@@ -199,7 +199,7 @@ def main():
             if (k + 1) % 20 == 0:
                 print 'all average train loss is : %f' % (cost / (k + 1))
                 print 'all average train acc is : %f' % (train_acc / (k + 1))
-            if (k + 1) % 100 == 0:
+            if (k + 1) % 50 == 0:
                 model.training = False
                 acc = 0.0
                 num_batches_test = data_l.test_length / batch_size
