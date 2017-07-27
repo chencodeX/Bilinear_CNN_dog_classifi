@@ -164,7 +164,7 @@ def main():
     # for param_group in optimizer.param_groups:
     #     print param_group['lr']
     # 全局优化
-    optimizer = optim.SGD(model.parameters(), lr=(1e-04), momentum=0.9, weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr=(1e-03), momentum=0.9, weight_decay=0.0005)
     batch_size = data_l.batch_szie
     data_aug_num = data_l.data_add
     mini_batch_size = batch_size / data_aug_num
@@ -172,7 +172,7 @@ def main():
     for e in range(epochs):
         cost = 0.0
         train_acc = 0.0
-        if e == 8:
+        if e == 12:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
         # elif e==4:
