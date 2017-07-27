@@ -351,7 +351,7 @@ if __name__ == '__main__':
 
     lr = 0.00001
     finetune_step = -1
-
+    data_l.batch_szie = 32
     val_batch_size = data_l.batch_szie
     total_val_count = data_l.test_length
     correct_val_count = 0.0
@@ -381,7 +381,7 @@ if __name__ == '__main__':
     validation_accuracy_buffer = []
     for epoch in range(100):
         avg_cost = 0.
-
+        data_l.batch_szie = 8
         total_test_count = data_l.train_length/(data_l.batch_szie/data_l.data_add)
         for i in range(total_test_count):
             batch_xs, batch_ys = data_l.get_train_data()
@@ -407,7 +407,7 @@ if __name__ == '__main__':
                 print("Training Accuracy -->", accuracy.eval(feed_dict={imgs: batch_xs, target: batch_ys}, session=sess))
                 #print(sess.run(vgg.fc3l, feed_dict={imgs: batch_xs, target: batch_ys}))
 
-
+        data_l.batch_szie = 32
         val_batch_size = data_l.batch_szie
         total_val_count = data_l.test_length
         correct_val_count = 0.0
