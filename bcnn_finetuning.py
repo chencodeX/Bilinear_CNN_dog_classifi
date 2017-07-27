@@ -304,7 +304,7 @@ if __name__ == '__main__':
     # # X_train, Y_train = shuffle(X_train, Y_train)
     # X_val, Y_val = shuffle(X_val, Y_val)
     # print("Data shapes -- ( val)", X_val.shape, X_val.shape)
-    data_l = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
+    data_l = data_loader_(batch_size=32,proportion=0.85,shuffle=True,data_add=2,onehot=True,data_size=448,nb_classes=100)
     
     
     sess = tf.Session()     ## Start session to create training graph
@@ -390,7 +390,7 @@ if __name__ == '__main__':
             start = time.time()
             sess.run([optimizer,check_op], feed_dict={imgs: batch_xs, target: batch_ys})
             if i%20==0:
-                print('Full BCNN finetuning, time to run optimizer for batch size 8:',time.time()-start,'seconds')
+                print('Full BCNN finetuning, time to run optimizer for batch size 32:',time.time()-start,'seconds')
 
 
             cost = sess.run(loss, feed_dict={imgs: batch_xs, target: batch_ys})
