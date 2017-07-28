@@ -147,7 +147,9 @@ def main():
     # print model
     print '1'
     model = model.cuda()
+    print '1'
     loss = torch.nn.CrossEntropyLoss(size_average=True)
+    print '1'
     loss = loss.cuda()
     print '1'
     # 对局部优化
