@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
+sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi/")
 print sys.path
 import numpy as np
 import torch
