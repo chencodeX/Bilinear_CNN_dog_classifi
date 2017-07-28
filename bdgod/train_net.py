@@ -57,8 +57,8 @@ def adjust_learning_rate(optimizer, epoch):
 def main():
     torch.manual_seed(23)
     Band_num = 1
-    Tag_id = 2
-    data_l = data_loader_(batch_size=96, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=3, onehot=False,
+    Tag_id = 3
+    data_l = data_loader_(batch_size=192, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=4, onehot=False,
                           data_size=299, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
@@ -174,10 +174,10 @@ def main():
         train_acc = 0.0
         if e == 8:
             for param_group in optimizer.param_groups:
-                param_group['lr'] = param_group['lr'] * 0.1
-        # elif e==4:
-        #     for param_group in optimizer.param_groups:
-        #         param_group['lr'] = param_group['lr'] * 0.1
+                param_group['lr'] = param_group['lr'] * 0.3
+        elif e==15:
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = param_group['lr'] * 0.3
 
 
         num_batches_train = data_l.train_length / mini_batch_size
