@@ -13,7 +13,7 @@ from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
-from utils import data_loader
+# from utils import data_loader
 from utils.cv_data_loder import data_loader_
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
