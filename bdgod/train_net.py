@@ -145,9 +145,11 @@ def main():
     #                      model.parameters())
     # print '==============================='
     # print model
+    print '1'
     model = model.cuda()
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
+    print '1'
     # 对局部优化
     # optimizer = optim.SGD(model.group2.parameters(), lr=(1e-03), momentum=0.9,weight_decay=0.001)
     # optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
@@ -169,6 +171,7 @@ def main():
     data_aug_num = data_l.data_add
     mini_batch_size = batch_size / data_aug_num
     epochs = 1000
+    print '1'
     for e in range(epochs):
         cost = 0.0
         train_acc = 0.0
