@@ -3,6 +3,8 @@
 import sys
 
 sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi/")
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 print sys.path
 import numpy as np
 import torch
@@ -58,7 +60,7 @@ def main():
     torch.manual_seed(23)
     Band_num = 1
     Tag_id = 3
-    data_l = data_loader_(batch_size=128, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=2, onehot=False,
+    data_l = data_loader_(batch_size=64, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=2, onehot=False,
                           data_size=299, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
