@@ -58,7 +58,7 @@ def findmode(values):
 
 def main():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/resnet_model_pretrained_adam_46_9_3.pkl')
+    model = torch.load('models/better1.pkl')
     X_data = []
     Y_Data = []
     dog_key = os.listdir(Image_Path)
@@ -196,22 +196,22 @@ def do_all_cv(index):
 
 
 if __name__ == '__main__':
-    # main()
-    models = []
-    for i in range(len(all_models)):
-        do_all_cv(i)
-        print i
-    lengt = len(all_img_lab)
-    print lengt
-    count = 0
-    # raw_input("raw_input: ")
-    for key, value in all_img_lab.iteritems():
-        # print key, value
-        arr = np.array(value)
-        r_a = arr.mean(axis=0)
-        flag = r_a.argmax()
-        print flag,all_img_cv_lab[key]
-        if flag == all_img_cv_lab[key]:
-            count+=1
-
-    print count / (lengt*1.0)
+    main()
+    # models = []
+    # for i in range(len(all_models)):
+    #     do_all_cv(i)
+    #     print i
+    # lengt = len(all_img_lab)
+    # print lengt
+    # count = 0
+    # # raw_input("raw_input: ")
+    # for key, value in all_img_lab.iteritems():
+    #     # print key, value
+    #     arr = np.array(value)
+    #     r_a = arr.mean(axis=0)
+    #     flag = r_a.argmax()
+    #     print flag,all_img_cv_lab[key]
+    #     if flag == all_img_cv_lab[key]:
+    #         count+=1
+    #
+    # print count / (lengt*1.0)
