@@ -206,7 +206,7 @@ if __name__ == '__main__':
     count = 0
     # raw_input("raw_input: ")
     for key, value in all_img_lab.iteritems():
-        print key, value
+        # print key, value
         arr = np.array(value)
         r_a = arr.mean(axis=0)
         flag = r_a.argmax()
