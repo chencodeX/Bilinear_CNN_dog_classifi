@@ -166,7 +166,7 @@ def do_all(index):
 
 def do_all_cv(index):
     img_index = 0
-    batch_size = 128
+    batch_size = 64
     data_l = data_loader_(batch_size=batch_size, band_num=1, tag_id=1, shuffle=False, data_add=2, onehot=False,
                           data_size=299, nb_classes=100)
     num_batches_test = data_l.test_length / batch_size
