@@ -123,6 +123,7 @@ class Inception3(nn.Module):
         x = x.view(x.size(0), -1)
         future = x.clone()
         print future.size()
+        print '12321'
         # 2048
         x = self.group1(x)
         # 1000 (num_classes)
