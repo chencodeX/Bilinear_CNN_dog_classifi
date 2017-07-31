@@ -30,8 +30,8 @@ def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
     if type(output) == tuple:
-        return output[0].cpu().data.numpy().argmax(axis=1)
-    return output.cpu().data.numpy().argmax(axis=1)
+        return output[0].cpu().data.numpy()
+    return output.cpu().data.numpy()
 
 
 def findmode(values):
@@ -199,14 +199,16 @@ if __name__ == '__main__':
     models = []
     for i in range(len(all_models)):
         do_all_cv(i)
+        print i
     lengt = len(all_img_lab)
     print lengt
     count = 0
     # raw_input("raw_input: ")
     for key, value in all_img_lab.iteritems():
         print key, value
-        flag = findmode(value)
-        flag = flag[0][0]
+        arr = np.array(value)
+        r_a = arr.mean(axis=0)
+        flag = r_a.argmax()
         print flag,all_img_cv_lab[key]
         if flag == all_img_cv_lab[key]:
             count+=1
