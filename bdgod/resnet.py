@@ -140,6 +140,7 @@ class ResNet(nn.Module):
         x = self.layer4(x)
 
         x = self.avgpool(x)
+        print x.size
         x = x.view(x.size(0), -1)
         print x.size
         x = self.group2(x)
