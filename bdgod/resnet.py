@@ -141,6 +141,7 @@ class ResNet(nn.Module):
 
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
+        print x.size
         x = self.group2(x)
 
         return x
