@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi/")
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 print sys.path
 import numpy as np
 import torch
