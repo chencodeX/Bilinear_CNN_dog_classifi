@@ -55,6 +55,11 @@ def adjust_learning_rate(optimizer, epoch):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
+def preprocess_input(x):
+    x /= 255.
+    x -= 0.5
+    x *= 2.
+    return x
 
 def main():
     torch.manual_seed(23)
@@ -192,9 +197,10 @@ def main():
         for k in range(num_batches_train):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
@@ -213,9 +219,10 @@ def main():
                 for j in range(num_batches_test):
                     teX, teY = data_l.get_test_data()
                     teX = teX.transpose(0, 3, 1, 2)
-                    teX[:, 0, ...] -= MEAN_VALUE[0]
-                    teX[:, 1, ...] -= MEAN_VALUE[1]
-                    teX[:, 2, ...] -= MEAN_VALUE[2]
+                    # teX[:, 0, ...] -= MEAN_VALUE[0]
+                    # teX[:, 1, ...] -= MEAN_VALUE[1]
+                    # teX[:, 2, ...] -= MEAN_VALUE[2]
+                    teX = preprocess_input(teX)
                     teX = torch.from_numpy(teX).float()
                     # teY = torch.from_numpy(teY).long()
                     predY = predict(model, teX)
