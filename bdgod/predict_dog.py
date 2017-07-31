@@ -198,12 +198,14 @@ if __name__ == '__main__':
     for i in range(len(all_models)):
         do_all_cv(i)
     lengt = len(all_img_lab)
+    print lengt
     count = 0
     # raw_input("raw_input: ")
     for key, value in all_img_lab.iteritems():
         print key, value
         flag = findmode(value)
         flag = flag[0][0]
+        print flag,all_img_cv_lab[key]
         if flag == all_img_cv_lab[key]:
             count+=1
 
