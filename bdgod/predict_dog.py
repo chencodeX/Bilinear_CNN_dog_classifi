@@ -203,6 +203,7 @@ if __name__ == '__main__':
     for key, value in all_img_lab.iteritems():
         print key, value
         flag = findmode(value)
+        flag = flag[0][0]
         if flag == all_img_cv_lab[key]:
             count+=1
 
