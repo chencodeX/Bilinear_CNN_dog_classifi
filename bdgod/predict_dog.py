@@ -73,7 +73,7 @@ def main():
             img = cv2.resize(img, (224, 224))
             img = img.transpose(2, 0, 1)
             X_data.append(img[None, ...])
-            if count % 128 == 0:
+            if count % 64 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
                 X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
