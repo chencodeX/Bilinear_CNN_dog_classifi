@@ -128,7 +128,7 @@ class Inception3(nn.Module):
         # 1000 (num_classes)
         if self.training and self.aux_logits:
             return x, aux
-        return x
+        return x,future
 
 
 class InceptionA(nn.Module):
