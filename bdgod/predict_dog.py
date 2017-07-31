@@ -10,12 +10,14 @@ import os
 import numpy as np
 import torch
 from torch.autograd import Variable
+from utils.cv_data_loder import data_loader_
 from dog_config import *
 
 all_models = ['b1_0_3.pkl','b1_1_2.pkl','b1_2_0.pkl','b1_3_1.pkl','b1_4_0.pkl','b2_0_1.pkl',
               'b2_1_0.pkl','b2_2_1.pkl','b2_3_2.pkl','b2_4_0.pkl']
 
 all_img_lab = {}
+all_img_cv_lab = {}
 def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
@@ -109,9 +111,6 @@ def do_all(index):
                             if not all_img_lab.has_key(Y_Data[i][:-4]):
                                 all_img_lab[Y_Data[i][:-4]]=[]
                             all_img_lab[Y_Data[i][:-4]].append(int(key))
-                            #
-                            # with open('predict_dog.txt', 'a') as f:
-                            #     f.write('%s\t%s\n' % (key, Y_Data[i][:-4]))
                 X_data = []
                 Y_Data = []
             count += 1
@@ -132,12 +131,44 @@ def do_all(index):
                 if not all_img_lab.has_key(Y_Data[i][:-4]):
                     all_img_lab[Y_Data[i][:-4]] = []
                 all_img_lab[Y_Data[i][:-4]].append(int(key))
-                # with open('predict_dog.txt', 'a') as f:
-                #     f.write('%s\t%s\n' % (key, Y_Data[i][:-4]))
+
+def do_all_cv(index):
+    img_index = 0
+    batch_size = 128
+    data_l = data_loader_(batch_size=batch_size, band_num=1, tag_id=1, shuffle=True, data_add=2, onehot=False,
+                          data_size=299, nb_classes=100)
+    num_batches_test = data_l.test_length / batch_size
+    dog_key = os.listdir(Image_Path)
+    key_map = {dog_key[x]: x for x in range(100)}
+    model = torch.load('models/' + all_models[index])
+    for j in range(num_batches_test):
+        teX, teY = data_l.get_test_data()
+        teX = teX.transpose(0, 3, 1, 2)
+        teX[:, 0, ...] -= MEAN_VALUE[0]
+        teX[:, 1, ...] -= MEAN_VALUE[1]
+        teX[:, 2, ...] -= MEAN_VALUE[2]
+        teX = torch.from_numpy(teX).float()
+        # teY = torch.from_numpy(teY).long()
+        predY = predict(model, teX)
+        for i in range(len(predY)):
+            for key, value in key_map.iteritems():
+                if value == predY[i]:
+                    if not all_img_lab.has_key(img_index):
+                        all_img_lab[img_index] = []
+                    all_img_lab[img_index].append(int(key))
+                    if not all_img_cv_lab.has_key(img_index):
+                        all_img_cv_lab[img_index] = teY[i]
+                    all_img_cv_lab[img_index]=teY[i]
+
+
+
 
 if __name__ == '__main__':
     # main()
+    models = []
     for i in range(len(all_models)):
-        do_all(i)
-    for key,value in all_img_lab.iteritems():
-        print key,value
+        model = torch.load('models/' + all_models[i])
+        models.append(model)
+    raw_input("raw_input: ")
+    # for key,value in all_img_lab.iteritems():
+    #     print key,value
