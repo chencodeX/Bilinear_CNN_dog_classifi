@@ -175,6 +175,7 @@ def do_all_cv(index):
     dog_key = os.listdir(Image_Path)
     key_map = {dog_key[x]: x for x in range(100)}
     model = torch.load('models/' + all_models[index])
+    model.training = False
     for j in range(num_batches_test):
         teX, teY = data_l.get_test_data()
         teX = teX.transpose(0, 3, 1, 2)
