@@ -69,11 +69,11 @@ class Inception3(nn.Module):
                 m.bias.data.zero_()
 
     def forward(self, x):
-        print x.size()
+        # print x.size()
         if self.transform_input:
             x = x.clone()
-            print x[0].size()
-            print x[44].size()
+            # print x[0].size()
+            # print x[44].size()
             # print x.max()
             # print x.min()
             x[:,0] = x[:,0] * (0.229 / 0.5) + (0.485 - 0.5) / 0.5
@@ -125,8 +125,8 @@ class Inception3(nn.Module):
         # 1 x 1 x 2048
         x = x.view(x.size(0), -1)
         future = x.clone()
-        print future.size()
-        print '12321'
+        # print future.size()
+        # print '12321'
         # 2048
         x = self.group1(x)
         # 1000 (num_classes)
