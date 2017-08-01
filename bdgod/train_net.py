@@ -85,7 +85,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = resnet50(pretrained=True, model_root=Model_Root)
+    model = resnet101(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
@@ -205,31 +205,31 @@ def main():
             if (k + 1) % 20 == 0:
                 print 'all average train loss is : %f' % (cost / (k + 1))
                 print 'all average train acc is : %f' % (train_acc / (k + 1))
-            if (k + 1) % 100 == 0:
-                model.training = False
-                acc = 0.0
-                num_batches_test = data_l.test_length / batch_size
-                for j in range(num_batches_test+1):
-                    teX, teY = data_l.get_test_data()
-                    teX = teX.transpose(0, 3, 1, 2)
-                    # teX[:, 0, ...] -= MEAN_VALUE[0]
-                    # teX[:, 1, ...] -= MEAN_VALUE[1]
-                    # teX[:, 2, ...] -= MEAN_VALUE[2]
-                    teX = preprocess_input(teX)
-                    teX = torch.from_numpy(teX).float()
-                    # teY = torch.from_numpy(teY).long()
-                    predY = predict(model, teX)
-                    # print predY.dtype
-                    # print teY[start:end]
-                    acc += 1. * np.mean(predY == teY)
-                    # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
-                model.training = True
-                print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-                torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
-        model.training = False
+            # if (k + 1) % 100 == 0:
+            #     model.training = False
+            #     acc = 0.0
+            #     num_batches_test = data_l.test_length / batch_size
+            #     for j in range(num_batches_test+1):
+            #         teX, teY = data_l.get_test_data()
+            #         teX = teX.transpose(0, 3, 1, 2)
+            #         # teX[:, 0, ...] -= MEAN_VALUE[0]
+            #         # teX[:, 1, ...] -= MEAN_VALUE[1]
+            #         # teX[:, 2, ...] -= MEAN_VALUE[2]
+            #         teX = preprocess_input(teX)
+            #         teX = torch.from_numpy(teX).float()
+            #         # teY = torch.from_numpy(teY).long()
+            #         predY = predict(model, teX)
+            #         # print predY.dtype
+            #         # print teY[start:end]
+            #         acc += 1. * np.mean(predY == teY)
+            #         # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
+            #     model.training = True
+            #     print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
+            #     torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        # model.training = False
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
-        for j in range(num_batches_test):
+        for j in range(num_batches_test+1):
             teX, teY = data_l.get_test_data()
             teX = teX.transpose(0, 3, 1, 2)
             teX[:, 0, ...] -= MEAN_VALUE[0]
@@ -242,9 +242,9 @@ def main():
             # print teY[start:end]
             acc += 1. * np.mean(predY == teY)
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
-        model.training = True
+        # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/resnet101_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
