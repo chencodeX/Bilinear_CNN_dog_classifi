@@ -65,7 +65,7 @@ def main():
     torch.manual_seed(23)
     # Band_num = 2
     # Tag_id = 4
-    data_l = data_loader_(batch_size=96,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
@@ -86,7 +86,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = inception_v3(pretrained=True, model_root=Model_Root)
+    model = resnet101(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
