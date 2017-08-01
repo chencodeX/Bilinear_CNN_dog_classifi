@@ -72,6 +72,8 @@ class Inception3(nn.Module):
         print x.size()
         if self.transform_input:
             x = x.clone()
+            print x[0].size()
+            print x[44].size()
             # print x.max()
             # print x.min()
             x[:,0] = x[:,0] * (0.229 / 0.5) + (0.485 - 0.5) / 0.5
