@@ -64,7 +64,7 @@ def main():
     torch.manual_seed(23)
     # Band_num = 2
     # Tag_id = 4
-    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
+    data_l = data_loader_(batch_size=96,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=299, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
@@ -85,7 +85,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = resnet101(pretrained=True, model_root=Model_Root)
+    model = inception_v3(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
@@ -140,7 +140,7 @@ def main():
     #     print '****'
     #     print(module)
     # resnet50 FC层
-    model.group2 = nn.Sequential(
+    model.group1 = nn.Sequential(
         OrderedDict([
             ('fc', nn.Linear(2048, 100))
         ])
@@ -178,7 +178,7 @@ def main():
     for e in range(epochs):
         cost = 0.0
         train_acc = 0.0
-        if e == 4:
+        if e == 12:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
 
@@ -188,12 +188,12 @@ def main():
         for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             # print batch_train_data_X.shape
             # print batch_train_data_Y.shape
-            # batch_train_data_X = preprocess_input(batch_train_data_X)
+            batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
@@ -232,10 +232,10 @@ def main():
         for j in range(num_batches_test+1):
             teX, teY = data_l.get_test_data()
             teX = teX.transpose(0, 3, 1, 2)
-            teX[:, 0, ...] -= MEAN_VALUE[0]
-            teX[:, 1, ...] -= MEAN_VALUE[1]
-            teX[:, 2, ...] -= MEAN_VALUE[2]
-            # teX = preprocess_input(teX)
+            # teX[:, 0, ...] -= MEAN_VALUE[0]
+            # teX[:, 1, ...] -= MEAN_VALUE[1]
+            # teX[:, 2, ...] -= MEAN_VALUE[2]
+            teX = preprocess_input(teX)
             teX = torch.from_numpy(teX).float()
             # teY = torch.from_numpy(teY).long()
             predY = predict(model, teX)
@@ -245,7 +245,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/resnet101_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/inception_v3_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
