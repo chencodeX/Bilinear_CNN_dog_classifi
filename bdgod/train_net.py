@@ -199,7 +199,7 @@ def main():
             batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             print batch_train_data_X.shape
             print batch_train_data_Y.shape
-            # batch_train_data_X = preprocess_input(batch_train_data_X)
+            batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
