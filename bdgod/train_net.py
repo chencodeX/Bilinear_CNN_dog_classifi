@@ -196,11 +196,11 @@ def main():
         print num_batches_train
         for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
-            batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
-            # batch_train_data_X = preprocess_input(batch_train_data_X)
+            # batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
+            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
