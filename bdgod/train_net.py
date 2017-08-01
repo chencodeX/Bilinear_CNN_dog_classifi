@@ -15,8 +15,6 @@ from collections import OrderedDict
 from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
-# from utils import data_loader
-# from utils.data_loder import data_loader_
 from utils.data_loader import data_loader_
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
@@ -142,7 +140,7 @@ def main():
     #     print '****'
     #     print(module)
     # resnet50 FC层
-    model.group1 = nn.Sequential(
+    model.group2 = nn.Sequential(
         OrderedDict([
             ('fc', nn.Linear(2048, 100))
         ])
@@ -152,13 +150,9 @@ def main():
     #                      model.parameters())
     # print '==============================='
     # print model
-    print '1'
     model = model.cuda()
-    print '1'
     loss = torch.nn.CrossEntropyLoss(size_average=True)
-    print '1'
     loss = loss.cuda()
-    print '1'
     # 对局部优化
     # optimizer = optim.SGD(model.group2.parameters(), lr=(1e-03), momentum=0.9,weight_decay=0.001)
     # optimizer = optim.Adam([{'params':model.layer4[2].parameters()},
