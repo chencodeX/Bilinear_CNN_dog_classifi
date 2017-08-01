@@ -140,6 +140,7 @@ class ResNet(nn.Module):
         # x[2] = x[2] * (0.225 / 0.5) + (0.406 - 0.5) / 0.5
         # print x.max()
         # print x.min()
+        print x.size()
         x = self.group1(x)
 
         x = self.layer1(x)
