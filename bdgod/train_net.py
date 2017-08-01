@@ -187,9 +187,6 @@ def main():
         if e == 12:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.1
-        # elif e==15:
-        #     for param_group in optimizer.param_groups:
-        #         param_group['lr'] = param_group['lr'] * 0.3
 
 
         num_batches_train = data_l.train_length / mini_batch_size
@@ -200,6 +197,8 @@ def main():
             batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
             batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
             batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            print batch_train_data_X.shape
+            print batch_train_data_Y.shape
             # batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
