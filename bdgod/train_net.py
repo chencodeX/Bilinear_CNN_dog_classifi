@@ -66,7 +66,7 @@ def main():
     torch.manual_seed(23)
     # Band_num = 2
     # Tag_id = 4
-    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=299, nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
@@ -87,7 +87,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = inception_v3(pretrained=True, model_root=Model_Root)
+    model = resnet50(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
@@ -197,9 +197,9 @@ def main():
             batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
             batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
             batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
-            print batch_train_data_X.shape
-            print batch_train_data_Y.shape
-            batch_train_data_X = preprocess_input(batch_train_data_X)
+            # print batch_train_data_X.shape
+            # print batch_train_data_Y.shape
+            # batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
@@ -211,7 +211,7 @@ def main():
             if (k + 1) % 20 == 0:
                 print 'all average train loss is : %f' % (cost / (k + 1))
                 print 'all average train acc is : %f' % (train_acc / (k + 1))
-            if (k + 1) % 50 == 0:
+            if (k + 1) % 100 == 0:
                 model.training = False
                 acc = 0.0
                 num_batches_test = data_l.test_length / batch_size
