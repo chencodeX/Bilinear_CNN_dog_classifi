@@ -1,6 +1,7 @@
 #!/usr/bin/evn python
 # -*- coding: utf-8 -*-
 import sys
+
 sys.path.append("/mnt/git/Bilinear_CNN_dog_classifi-/")
 import pickle
 import random
@@ -10,8 +11,10 @@ import numpy as np
 from bdgod.dog_config import *
 from bdgod.data_augmentation import data_augmentation_img
 
+
 class data_loader_(object):
-    def __init__(self, batch_size, proportion=0.8, shuffle=True, data_add=4, onehot=True,data_size =224,nb_classes = 100):
+    def __init__(self, batch_size, proportion=0.8, shuffle=True, data_add=4, onehot=True, data_size=224,
+                 nb_classes=100):
         self.batch_szie = batch_size
         self.shuffle = shuffle
         self.all_pic_inf = self.load_keys()
@@ -28,6 +31,7 @@ class data_loader_(object):
         self.data_size = data_size
         self.nb_classes = nb_classes
         self.onehot = onehot
+
     def load_keys(self):
         file_d = open('all_pic_infs.pkl', 'rb')
         pic_data = pickle.load(file_d)
@@ -52,7 +56,7 @@ class data_loader_(object):
         self.test_index += 1
         if self.test_index == self.test_length:
             random.shuffle(self.test_data)
-            self.test_index =0
+            self.test_index = 0
 
     def data_pop(self, train=True):
         if train:
@@ -65,7 +69,7 @@ class data_loader_(object):
             return data_temp
 
     def get_train_data(self):
-        result = np.ones((0,self.data_size,self.data_size,3))
+        result = np.ones((0, self.data_size, self.data_size, 3))
         pop_num = self.batch_szie / self.data_add
         all_labels = []
         for i in range(pop_num):
@@ -74,7 +78,7 @@ class data_loader_(object):
             label = image_path.split('/')[-2]
             label = self.key_map[label]
             labels = [int(label) for x in range(self.data_add)]
-            all_labels +=labels
+            all_labels += labels
             image_points = data_temp[1]
             point_index = random.randint(1, len(image_points)) - 1
             point_value = image_points[point_index]
@@ -83,18 +87,18 @@ class data_loader_(object):
             rad_width = (point_value[2] - point_value[0]) / 10
             rad_hight = (point_value[3] - point_value[1]) / 10
             point_value[0] = point_value[0] + random.randint(0, rad_width) - (rad_width / 2)
-            if point_value[0]<0:
-                point_value[0]=0
+            if point_value[0] < 0:
+                point_value[0] = 0
             point_value[2] = point_value[2] + random.randint(0, rad_width) - (rad_width / 2)
             point_value[1] = point_value[1] + random.randint(0, rad_hight) - (rad_hight / 2)
-            if point_value[1]<0:
-                point_value[1]=0
+            if point_value[1] < 0:
+                point_value[1] = 0
             point_value[3] = point_value[3] + random.randint(0, rad_hight) - (rad_hight / 2)
-            corp_img = img_temp_arr[point_value[1]:point_value[3],point_value[0]:point_value[2]]
-            all_imgs = data_augmentation_img(corp_img,data_size=self.data_size)
+            corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
+            all_imgs = data_augmentation_img(corp_img, data_size=self.data_size)
             all_imgs = all_imgs[:self.data_add]
             assert len(all_imgs) == self.data_add
-            result = np.concatenate((result,all_imgs),axis=0)
+            result = np.concatenate((result, all_imgs), axis=0)
         if self.onehot:
             targets = np.array(all_labels).reshape(-1)
             all_labels = np.eye(self.nb_classes)[targets]
@@ -102,7 +106,7 @@ class data_loader_(object):
             all_labels = np.array(all_labels)
 
         assert result.shape[0] == all_labels.shape[0]
-        return result,all_labels
+        return result, all_labels
 
     def get_test_data(self):
         result = np.ones((0, self.data_size, self.data_size, 3))
@@ -118,10 +122,10 @@ class data_loader_(object):
             image_points = data_temp[1]
             point_index = random.randint(1, len(image_points)) - 1
             point_value = image_points[point_index]
-            if point_value[0]<0:
-                point_value[0]=0
-            if point_value[1]<0:
-                point_value[1]=0
+            if point_value[0] < 0:
+                point_value[0] = 0
+            if point_value[1] < 0:
+                point_value[1] = 0
             img_temp = cv2.imread(image_path)
             img_temp_arr = np.array(img_temp)
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
@@ -130,7 +134,7 @@ class data_loader_(object):
             # print corp_img.shape
             # print self.data_size
             corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
-            corp_img = corp_img[np.newaxis,...]
+            corp_img = corp_img[np.newaxis, ...]
             # print corp_img.shape
             result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
@@ -143,21 +147,21 @@ class data_loader_(object):
         return result, all_labels
 
 
-
 if __name__ == '__main__':
-    dl = data_loader_(batch_size=64,proportion=0.85,shuffle=True,data_add=4,onehot=True,data_size=448,nb_classes=100)
+    dl = data_loader_(batch_size=64, proportion=0.85, shuffle=True, data_add=4, onehot=True, data_size=448,
+                      nb_classes=100)
     for i in range(3):
         # X_data,Y_data = dl.get_train_data()
         # for x in range(len(X_data)):
         #     cv2.imwrite('train_%s_%s.jpg'%(i,x),X_data[x])
         # print X_data.shape
         # print Y_data.shape
-        X_data,Y_data = dl.get_test_data()
+        X_data, Y_data = dl.get_test_data()
         # for x in range(len(X_data)):
         #     cv2.imwrite('test_%s_%s.jpg'%(i,x),X_data[x])
         print X_data.shape
         print Y_data.shape
-    #
-    # X_data,Y_data = dl.get_train_data()
-    # print X_data[0]
-    # print Y_data[0]
+        #
+        # X_data,Y_data = dl.get_train_data()
+        # print X_data[0]
+        # print Y_data[0]

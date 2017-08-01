@@ -16,7 +16,7 @@ from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
 # from utils import data_loader
-from utils.cv_data_loder import data_loader_
+from utils.data_loder import data_loader_
 # from data_augmentation import data_augmentation_img
 from vggnet import vgg16
 from load_image import load_data
@@ -63,10 +63,9 @@ def preprocess_input(x):
 
 def main():
     torch.manual_seed(23)
-    Band_num = 2
-    Tag_id = 4
-    data_l = data_loader_(batch_size=96, band_num=Band_num, tag_id=Tag_id, shuffle=True, data_add=2, onehot=False,
-                          data_size=299, nb_classes=100)
+    # Band_num = 2
+    # Tag_id = 4
+    data_l = data_loader_(batch_size=96,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'

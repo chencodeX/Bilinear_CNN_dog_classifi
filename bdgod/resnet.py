@@ -132,6 +132,13 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        x = x.clone()
+        # print x.max()
+        # print x.min()
+        x[0] = x[0] * (0.229 / 0.5) + (0.485 - 0.5) / 0.5
+        x[1] = x[1] * (0.224 / 0.5) + (0.456 - 0.5) / 0.5
+        x[2] = x[2] * (0.225 / 0.5) + (0.406 - 0.5) / 0.5
+
         x = self.group1(x)
 
         x = self.layer1(x)
@@ -140,12 +147,12 @@ class ResNet(nn.Module):
         x = self.layer4(x)
 
         x = self.avgpool(x)
-        print x.size()
+        # print x.size()
         x = x.view(x.size(0), -1)
-        print x.size()
+        future = x.clone()
         x = self.group2(x)
 
-        return x
+        return x,future
 
 
 def resnet18(pretrained=False, model_root=None, **kwargs):
