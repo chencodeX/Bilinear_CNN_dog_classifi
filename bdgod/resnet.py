@@ -132,14 +132,14 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        x = x.clone()
-        print x.max()
-        print x.min()
-        x[0] = x[0] * (0.229 / 0.5) + (0.485 - 0.5) / 0.5
-        x[1] = x[1] * (0.224 / 0.5) + (0.456 - 0.5) / 0.5
-        x[2] = x[2] * (0.225 / 0.5) + (0.406 - 0.5) / 0.5
-        print x.max()
-        print x.min()
+        # x = x.clone()
+        # print x.max()
+        # print x.min()
+        # x[0] = x[0] * (0.229 / 0.5) + (0.485 - 0.5) / 0.5
+        # x[1] = x[1] * (0.224 / 0.5) + (0.456 - 0.5) / 0.5
+        # x[2] = x[2] * (0.225 / 0.5) + (0.406 - 0.5) / 0.5
+        # print x.max()
+        # print x.min()
         x = self.group1(x)
 
         x = self.layer1(x)
