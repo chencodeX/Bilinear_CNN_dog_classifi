@@ -33,16 +33,15 @@ class data_loader_(object):
         self.onehot = onehot
 
     def load_keys(self):
-        file_d = open('all_pic_infs.pkl', 'rb')
+        file_d = open('all_pic_infs1.pkl', 'rb')
         pic_data = pickle.load(file_d)
+        file_d.close()
         print len(pic_data)
         # print pic_data
-        pic_data = pic_data.items()
-        random.shuffle(pic_data)
-
+        # pic_data = pic_data.items()
+        # random.shuffle(pic_data)
         dog_key = os.listdir(Image_Path)
         self.key_map = {dog_key[x]: x for x in range(100)}
-        file_d.close()
         # print pic_data
         return pic_data
 
