@@ -64,7 +64,7 @@ def main():
     torch.manual_seed(23)
     # Band_num = 2
     # Tag_id = 4
-    data_l = data_loader_(batch_size=96,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=299, nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=299, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
