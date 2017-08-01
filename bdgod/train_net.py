@@ -193,7 +193,7 @@ def main():
 
         num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
-        for k in range(num_batches_train):
+        for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
             # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
@@ -215,7 +215,7 @@ def main():
                 model.training = False
                 acc = 0.0
                 num_batches_test = data_l.test_length / batch_size
-                for j in range(num_batches_test):
+                for j in range(num_batches_test+1):
                     teX, teY = data_l.get_test_data()
                     teX = teX.transpose(0, 3, 1, 2)
                     # teX[:, 0, ...] -= MEAN_VALUE[0]
@@ -231,8 +231,7 @@ def main():
                     # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
                 model.training = True
                 print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-                torch.save(model, 'models/inception_model_pretrained_band%d_tag%d_%s_%s_%s_1.pkl' % (
-                Band_num, Tag_id, 'SGD', str(e), str(k)))
+                torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
         model.training = False
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
@@ -251,8 +250,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/inception_model_pretrained_band%d_tag%d_%s_%s_%s_1.pkl' % (
-            Band_num, Tag_id, 'SGD', str(e), str(k)))
+        torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
