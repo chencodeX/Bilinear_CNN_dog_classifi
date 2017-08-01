@@ -69,6 +69,7 @@ class Inception3(nn.Module):
                 m.bias.data.zero_()
 
     def forward(self, x):
+        print x.size()
         if self.transform_input:
             x = x.clone()
             # print x.max()
