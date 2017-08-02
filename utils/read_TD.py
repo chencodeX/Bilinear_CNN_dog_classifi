@@ -5,16 +5,16 @@
 import cv2
 import pickle
 
-Image_Path = '/home/yuexibin/bddog/imgdata/all_img'
+Image_Path = '/mnt/git/data/image'
 def read_txt():
     all_pic_infs = {}
-    inf = open('all_det.txt', 'rb')
+    inf = open('detres_sense001_test.txt', 'rb')
     lines = inf.readlines()  # 读取全部内容
     for line in lines:
         line = line.strip('\r\n')
         key_value = line.split(' ')
         raw_path = key_value[0]
-        new_path = raw_path.replace('/home/meteo/zihao.chen/filter_ext/img_data',Image_Path)
+        new_path = raw_path.replace('/home/meteo/xibin.yue/data/dog_cls_data/test/test1',Image_Path)
         # print new_path
         temp_list = []
         key_value = line.split('.jpg ')
@@ -36,7 +36,7 @@ def read_txt():
             all_pic_infs[new_path]=temp_list
         all_pic_infs[new_path] = temp_list
         print new_path ,' ',temp_list
-    file_d = open('all_pic_infs.pkl','wb')
+    file_d = open('all_test_pic_infs.pkl','wb')
 
     pickle.dump(all_pic_infs,file_d)
     file_d.close()
