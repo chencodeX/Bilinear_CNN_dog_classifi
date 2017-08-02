@@ -8,7 +8,6 @@ from collections import OrderedDict
 
 __all__ = ['DenseNet', 'densenet121', 'densenet169', 'densenet201', 'densenet161']
 
-
 model_urls = {
     'densenet121': 'https://download.pytorch.org/models/densenet121-241335ed.pth',
     'densenet169': 'https://download.pytorch.org/models/densenet169-6f0f7f60.pth',
@@ -75,11 +74,11 @@ class _DenseLayer(nn.Sequential):
         self.add_module('norm.1', nn.BatchNorm2d(num_input_features)),
         self.add_module('relu.1', nn.ReLU(inplace=True)),
         self.add_module('conv.1', nn.Conv2d(num_input_features, bn_size *
-                        growth_rate, kernel_size=1, stride=1, bias=False)),
+                                            growth_rate, kernel_size=1, stride=1, bias=False)),
         self.add_module('norm.2', nn.BatchNorm2d(bn_size * growth_rate)),
         self.add_module('relu.2', nn.ReLU(inplace=True)),
         self.add_module('conv.2', nn.Conv2d(bn_size * growth_rate, growth_rate,
-                        kernel_size=3, stride=1, padding=1, bias=False)),
+                                            kernel_size=3, stride=1, padding=1, bias=False)),
         self.drop_rate = drop_rate
 
     def forward(self, x):
@@ -119,6 +118,7 @@ class DenseNet(nn.Module):
         drop_rate (float) - dropout rate after each dense layer
         num_classes (int) - number of classification classes
     """
+
     def __init__(self, growth_rate=32, block_config=(6, 12, 24, 16),
                  num_init_features=64, bn_size=4, drop_rate=0, num_classes=1000):
 
@@ -151,6 +151,9 @@ class DenseNet(nn.Module):
         self.classifier = nn.Linear(num_features, num_classes)
 
     def forward(self, x):
+        x[:, 0] = (x[:, 0] - 0.485) / 0.229
+        x[:, 1] = (x[:, 1] - 0.456) / 0.224
+        x[:, 2] = (x[:, 2] - 0.406) / 0.225
         features = self.features(x)
         out = F.relu(features, inplace=True)
         out = F.avg_pool2d(out, kernel_size=7).view(features.size(0), -1)

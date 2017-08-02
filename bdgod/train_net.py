@@ -247,7 +247,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/inception_v3_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
