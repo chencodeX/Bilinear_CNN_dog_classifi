@@ -86,7 +86,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = densenet161(pretrained=True, model_root=Model_Root)
+    model = densenet161(pretrained=True)
     print '==============================='
     print model
     # for param in model.parameters():
