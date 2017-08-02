@@ -12,6 +12,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch import optim
 from collections import OrderedDict
+from densenet import densenet161
 from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
@@ -85,7 +86,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = inception_v3(pretrained=True, model_root=Model_Root)
+    model = densenet161(pretrained=True, model_root=Model_Root)
     print '==============================='
     print model
     # for param in model.parameters():
@@ -188,12 +189,12 @@ def main():
         for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             # print batch_train_data_X.shape
             # print batch_train_data_Y.shape
-            batch_train_data_X = preprocess_input(batch_train_data_X)
+            # batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
@@ -232,10 +233,10 @@ def main():
         for j in range(num_batches_test+1):
             teX, teY = data_l.get_test_data()
             teX = teX.transpose(0, 3, 1, 2)
-            # teX[:, 0, ...] -= MEAN_VALUE[0]
-            # teX[:, 1, ...] -= MEAN_VALUE[1]
-            # teX[:, 2, ...] -= MEAN_VALUE[2]
-            teX = preprocess_input(teX)
+            teX[:, 0, ...] -= MEAN_VALUE[0]
+            teX[:, 1, ...] -= MEAN_VALUE[1]
+            teX[:, 2, ...] -= MEAN_VALUE[2]
+            # teX = preprocess_input(teX)
             teX = torch.from_numpy(teX).float()
             # teY = torch.from_numpy(teY).long()
             predY = predict(model, teX)
