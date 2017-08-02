@@ -6,6 +6,7 @@ import cv2
 import pickle
 
 Image_Path = '/mnt/git/data/image'
+
 def read_txt():
     all_pic_infs = {}
     inf = open('detres_sense001_test.txt', 'rb')
