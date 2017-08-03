@@ -58,7 +58,7 @@ def findmode(values):
 
 def main():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/better1.pkl')
+    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
     X_data = []
     Y_Data = []
     dog_key = os.listdir(Image_Path)
