@@ -65,6 +65,7 @@ def findmode(values):
 def main():
     image_files = os.listdir(Test_Image_Path)
     model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
+    model.training = False
     X_data = []
     Y_Data = []
     dog_key = os.listdir(Image_Path)
