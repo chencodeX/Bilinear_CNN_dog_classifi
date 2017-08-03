@@ -77,7 +77,7 @@ def main():
         if os.path.exists(image_path):
             Y_Data.append(file_name)
             img = cv2.imread(image_path) * 1.0
-            img = cv2.resize(img, (224, 224))
+            img = cv2.resize(img, (299, 299))
             img = img.transpose(2, 0, 1)
             X_data.append(img[None, ...])
             if count % 64 == 0:
