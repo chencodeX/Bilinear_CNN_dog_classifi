@@ -156,9 +156,9 @@ class DenseNet(nn.Module):
         x[:, 1] = (x[:, 1] - 0.456) / 0.224
         x[:, 2] = (x[:, 2] - 0.406) / 0.225
         features = self.features(x)
-        temp_size = features.size(0)
+        # temp_size = features.size(0)
         out = F.relu(features, inplace=True)
-        out = F.avg_pool2d(out, kernel_size=7).view(temp_size, -1)
+        out = F.avg_pool2d(out, kernel_size=7).view(features.size(0), -1)
         # print out.size()
         out = self.classifier(out)
         return out
