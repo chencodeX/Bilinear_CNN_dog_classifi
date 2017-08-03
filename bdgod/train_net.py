@@ -180,7 +180,7 @@ def main():
     for e in range(epochs):
         cost = 0.0
         train_acc = 0.0
-        if e == 8:
+        if e == 12:
             for param_group in optimizer.param_groups:
                 param_group['lr'] = param_group['lr'] * 0.3
 
