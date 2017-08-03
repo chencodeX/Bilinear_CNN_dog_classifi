@@ -30,8 +30,8 @@ def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
     if type(output) == tuple:
-        return output[0].cpu().data.numpy()
-    return output.cpu().data.numpy()
+        return output[0].cpu().data.numpy().argmax(axis=1)
+    return output.cpu().data.numpy().argmax(axis=1)
 
 
 def findmode(values):
