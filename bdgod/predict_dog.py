@@ -26,6 +26,12 @@ all_img_lab = {}
 all_img_cv_lab = {}
 
 
+def preprocess_input(x):
+    x /= 255.
+    # x -= 0.5
+    # x *= 2.
+    return x
+
 def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
@@ -58,7 +64,7 @@ def findmode(values):
 
 def main():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
+    model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
     X_data = []
     Y_Data = []
     dog_key = os.listdir(Image_Path)
@@ -76,9 +82,10 @@ def main():
             if count % 64 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
-                X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-                X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-                X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+                # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+                # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                X_data_NP = preprocess_input(X_data_NP)
                 teX = torch.from_numpy(X_data_NP).float()
                 predY = predict(model, teX)
                 print predY.shape
