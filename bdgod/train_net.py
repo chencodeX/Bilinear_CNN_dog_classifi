@@ -171,7 +171,7 @@ def main():
     # for param_group in optimizer.param_groups:
     #     print param_group['lr']
     # 全局优化
-    optimizer = optim.SGD(model.parameters(), lr=(1e-03), momentum=0.9, weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr=(0.0004), momentum=0.9, weight_decay=0.0005)
     batch_size = data_l.batch_szie
     data_aug_num = data_l.data_add
     mini_batch_size = batch_size / data_aug_num
@@ -180,9 +180,9 @@ def main():
     for e in range(epochs):
         cost = 0.0
         train_acc = 0.0
-        if e == 12:
+        if e == 8:
             for param_group in optimizer.param_groups:
-                param_group['lr'] = param_group['lr'] * 0.1
+                param_group['lr'] = param_group['lr'] * 0.3
 
 
         num_batches_train = data_l.train_length / mini_batch_size
@@ -247,7 +247,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_2.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
