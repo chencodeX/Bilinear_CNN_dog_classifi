@@ -151,7 +151,7 @@ class DenseNet(nn.Module):
         self.classifier = nn.Linear(num_features, num_classes)
 
     def forward(self, x):
-        x = x.clone()
+        # x = x.clone()
         x[:, 0] = (x[:, 0] - 0.485) / 0.229
         x[:, 1] = (x[:, 1] - 0.456) / 0.224
         x[:, 2] = (x[:, 2] - 0.406) / 0.225
