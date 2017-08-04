@@ -189,7 +189,8 @@ def main():
         num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
         temp_info = 'train acc = %05f,train loss = %05f'
-        widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'),right=temp_info)]
+        x_temp = 'train acc = 0.0000,train loss = 0.0000'
+        widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'),right=x_temp)]
         pbar = ProgressBar(widgets=widgets, maxval=(num_batches_train+1))
         pbar.start()
 
@@ -213,7 +214,7 @@ def main():
             # if (k + 1) % 20 == 0:
             #     print 'all average train loss is : %f' % (cost / (k + 1))
             #     print 'all average train acc is : %f' % (train_acc / (k + 1))
-            temp_info = temp_info %(train_acc / (k + 1),cost / (k + 1))
+            x_temp = temp_info %(train_acc / (k + 1),cost / (k + 1))
             pbar.update(k)
             # if (k + 1) % 100 == 0:
             #     model.training = False
