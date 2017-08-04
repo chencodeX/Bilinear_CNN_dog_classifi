@@ -188,8 +188,11 @@ def main():
 
         num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
+        train_acc= 0.0
+        cost = 0.0
+        k =1
         temp_info = 'train acc = %05f,train loss = %05f'
-        x_temp = 'train acc = 0.0000,train loss = 0.0000'
+        x_temp = temp_info %(train_acc / (k + 1),cost / (k + 1))
         widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'),right=x_temp)]
         pbar = ProgressBar(widgets=widgets, maxval=(num_batches_train+1))
         pbar.start()
