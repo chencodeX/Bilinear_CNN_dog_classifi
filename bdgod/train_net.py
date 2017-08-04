@@ -190,12 +190,12 @@ def main():
         for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             # print batch_train_data_X.shape
             # print batch_train_data_Y.shape
-            # batch_train_data_X = preprocess_input(batch_train_data_X)
+            batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
@@ -247,7 +247,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_2.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_3.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
