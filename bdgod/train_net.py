@@ -193,7 +193,7 @@ def main():
         k =1
         temp_info = 'train acc = %05f,train loss = %05f'
         x_temp = temp_info %(train_acc / (k + 1),cost / (k + 1))
-        widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'),right=x_temp)]
+        widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>')),' ',x_temp]
         pbar = ProgressBar(widgets=widgets, maxval=(num_batches_train+1))
         pbar.start()
 
