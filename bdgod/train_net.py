@@ -13,6 +13,7 @@ from torch.autograd import Variable
 from torch import optim
 from collections import OrderedDict
 from densenet import densenet161
+from progressbar import *
 from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
 from dog_config import *
@@ -187,26 +188,33 @@ def main():
 
         num_batches_train = data_l.train_length / mini_batch_size
         print num_batches_train
+        temp_info = 'train acc = %05f,train loss = %05f'
+        widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'),right=temp_info)]
+        pbar = ProgressBar(widgets=widgets, maxval=(num_batches_train+1))
+        pbar.start()
+
         for k in range(num_batches_train+1):
             batch_train_data_X, batch_train_data_Y = data_l.get_train_data()
             batch_train_data_X = batch_train_data_X.transpose(0, 3, 1, 2)
-            # batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
-            # batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
-            # batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
+            batch_train_data_X[:, 0, ...] -= MEAN_VALUE[0]
+            batch_train_data_X[:, 1, ...] -= MEAN_VALUE[1]
+            batch_train_data_X[:, 2, ...] -= MEAN_VALUE[2]
             # print batch_train_data_X.shape
             # print batch_train_data_Y.shape
-            batch_train_data_X = preprocess_input(batch_train_data_X)
+            # batch_train_data_X = preprocess_input(batch_train_data_X)
             torch_batch_train_data_X = torch.from_numpy(batch_train_data_X).float()
             torch_batch_train_data_Y = torch.from_numpy(batch_train_data_Y).long()
             cost_temp, acc_temp = train(model, loss, optimizer, torch_batch_train_data_X, torch_batch_train_data_Y)
             train_acc += acc_temp
             cost += cost_temp
-            if (k + 1) % 10 == 0:
-                print 'now step train loss is : %f' % (cost_temp)
-                print 'now step train acc is : %f' % (acc_temp)
-            if (k + 1) % 20 == 0:
-                print 'all average train loss is : %f' % (cost / (k + 1))
-                print 'all average train acc is : %f' % (train_acc / (k + 1))
+            # if (k + 1) % 10 == 0:
+            #     print 'now step train loss is : %f' % (cost_temp)
+            #     print 'now step train acc is : %f' % (acc_temp)
+            # if (k + 1) % 20 == 0:
+            #     print 'all average train loss is : %f' % (cost / (k + 1))
+            #     print 'all average train acc is : %f' % (train_acc / (k + 1))
+            temp_info = temp_info %(train_acc / (k + 1),cost / (k + 1))
+            pbar.update(k)
             # if (k + 1) % 100 == 0:
             #     model.training = False
             #     acc = 0.0
@@ -228,16 +236,17 @@ def main():
             #     model.training = True
             #     print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
             #     torch.save(model, 'models/inception_model_pretrained_%s_%s_%s_1.pkl' % ('SGD', str(e), str(k)))
+        pbar.finish()
         # model.training = False
         acc = 0.0
         num_batches_test = data_l.test_length / batch_size
         for j in range(num_batches_test+1):
             teX, teY = data_l.get_test_data()
             teX = teX.transpose(0, 3, 1, 2)
-            # teX[:, 0, ...] -= MEAN_VALUE[0]
-            # teX[:, 1, ...] -= MEAN_VALUE[1]
-            # teX[:, 2, ...] -= MEAN_VALUE[2]
-            teX = preprocess_input(teX)
+            teX[:, 0, ...] -= MEAN_VALUE[0]
+            teX[:, 1, ...] -= MEAN_VALUE[1]
+            teX[:, 2, ...] -= MEAN_VALUE[2]
+            # teX = preprocess_input(teX)
             teX = torch.from_numpy(teX).float()
             # teY = torch.from_numpy(teY).long()
             predY = predict(model, teX)
@@ -247,7 +256,7 @@ def main():
             # print ('Epoch %d ,Step %d, acc = %.2f%%'%(e,k,100.*np.mean(predY==teY[start:end])))
         # model.training = True
         print 'Epoch %d ,Step %d, all test acc is : %f' % (e, k, acc / num_batches_test)
-        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_3.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/densenet161_model_pretrained_%s_%s_%s_4.pkl' % ('SGD', str(e), str(k)))
     print 'train over'
 
 
