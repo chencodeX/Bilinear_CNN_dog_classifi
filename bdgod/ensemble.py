@@ -157,10 +157,10 @@ def train():
 
 
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    nn = range(len(all_data))
-    np.random.shuffle(nn)
-    all_data = all_data[nn]
-    lable = lable[nn]
+    # nn = range(len(all_data))
+    # np.random.shuffle(nn)
+    # all_data = all_data[nn]
+    # lable = lable[nn]
     proportion = 0.85
     batch_size = 64
     train_X = all_data[:int(all_data.shape[0] * proportion)]
@@ -208,7 +208,7 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-
+        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_%s_4.pkl' % ('SGD', str(e), str(k)))
 
 if __name__ == '__main__':
     train()
