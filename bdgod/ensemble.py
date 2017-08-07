@@ -35,7 +35,7 @@ def main():
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0,2048)).astype(np.float)
-    all_lable = np.zeros((0,1))
+    all_lable = np.zeros((0))
     for j in range(num_batches + 1):
         teX, teY = data_l.get_test_data()
         print teY.shape
