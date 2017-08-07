@@ -144,7 +144,7 @@ def get_test_feature():
         all_lable.append(Y_Data[i][:-4])
     assert len(all_data)==len(all_lable)
     print all_data.shape
-    print all_lable.shape
+    print len(all_lable)
     np.save('feature_test_inception_v3.npy',all_data)
     np.save('lable_test_inception_v3.npy',all_lable)
 
