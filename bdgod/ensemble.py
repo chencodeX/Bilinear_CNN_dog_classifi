@@ -121,8 +121,8 @@ def train():
             start, end = i * batch_size, (i + 1) * batch_size
             batch_trX = train_X[start:end]
             batch_trY = train_Y[start:end]
-            tor_batch_trX = torch.from_numpy(batch_trX)
-            tor_batch_trY = torch.from_numpy(batch_trY)
+            tor_batch_trX = torch.from_numpy(batch_trX).float()
+            tor_batch_trY = torch.from_numpy(batch_trY).long()
             cost_temp, acc_temp = train_model(model, loss, optimizer, tor_batch_trX, tor_batch_trY)
             train_acc += acc_temp
             cost += cost_temp
@@ -135,7 +135,7 @@ def train():
         num_batches_test = int(test_X.shape[0] / batch_size)+1
         for j in range(num_batches_test):
             start, end = j * batch_size, (j + 1) * batch_size
-            predY = predict(model, torch.from_numpy(test_X[start:end]))
+            predY = predict(model, torch.from_numpy(test_X[start:end]).float())
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e,acc / num_batches_test)
