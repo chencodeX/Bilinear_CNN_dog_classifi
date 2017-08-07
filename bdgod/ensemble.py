@@ -155,7 +155,7 @@ def predict_ens():
     resnet_data = np.load('feature_test_resnet101.npy').astype(np.float)
     lable = np.load('lable_test_resnet101.npy')
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    model = torch.load('models/fcnet_model_shuffle_SGD_113_1.pkl')
+    model = torch.load('models/fcnet_model_noshuffle_SGD_213_1.pkl')
     model.training = False
     batch_size = 64
     predict_lable = np.zeros((0))
