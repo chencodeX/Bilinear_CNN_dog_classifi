@@ -95,12 +95,12 @@ def main():
 
 def get_test_feature():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
+    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
     # model.training = False
     # model.training = False
     X_data = []
     Y_Data = []
-    all_data = np.zeros((0, 2048)).astype(np.float)
+    all_data = np.zeros((0, 2208)).astype(np.float)
     all_lable = []
     dog_key = os.listdir(Image_Path)
     key_map = {dog_key[x]: x for x in range(100)}
