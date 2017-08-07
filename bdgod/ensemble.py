@@ -16,12 +16,19 @@ import random
 from dog_config import *
 
 
-
 def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
     if type(output) == tuple:
         return output[0].cpu().data.numpy().argmax(axis=1)
+    return output.cpu().data.numpy().argmax(axis=1)
+
+def predict_feature(model, x_val):
+    x = Variable(x_val.cuda(), requires_grad=False)
+    output = model.forward(x)
+    if type(output) == tuple:
+        print output[1].size()
+        return output[1].cpu().data.numpy()
     return output.cpu().data.numpy().argmax(axis=1)
 
 
@@ -86,6 +93,61 @@ def main():
     np.save('lable_resnet101.npy', all_lable)
 
 
+def get_test_feature():
+    image_files = os.listdir(Test_Image_Path)
+    model = torch.load('models/inception_v3_model_pretrained_SGD_12_498_1.pkl')
+    # model.training = False
+    X_data = []
+    Y_Data = []
+    all_data = np.zeros((0, 2048)).astype(np.float)
+    all_lable = []
+    dog_key = os.listdir(Image_Path)
+    key_map = {dog_key[x]: x for x in range(100)}
+    count = 1
+    for file_name in image_files:
+        image_path = os.path.join(Test_Image_Path, file_name)
+        print image_path
+        if os.path.exists(image_path):
+            Y_Data.append(file_name)
+            img = cv2.imread(image_path) * 1.0
+            img = cv2.resize(img, (299, 299))
+            img = img.transpose(2, 0, 1)
+            X_data.append(img[None, ...])
+            if count % 64 == 0:
+                X_data_NP = np.concatenate(X_data, axis=0)
+                print X_data_NP.shape
+                # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+                # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+                # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                X_data_NP = preprocess_input(X_data_NP)
+                teX = torch.from_numpy(X_data_NP).float()
+                futures = predict_feature(model, teX)
+                all_data = np.concatenate((all_data, futures), axis=0)
+                for i in range(len(Y_Data)):
+                    all_lable.append(Y_Data[i][:-4])
+                X_data = []
+                Y_Data = []
+            count += 1
+
+    X_data_NP = np.concatenate(X_data, axis=0)
+    print X_data_NP.shape
+    # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+    # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+    # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+    X_data_NP = preprocess_input(X_data_NP)
+    teX = torch.from_numpy(X_data_NP).float()
+    futures = predict_feature(model, teX)
+    all_data = np.concatenate((all_data, futures), axis=0)
+
+    for i in range(len(Y_Data)):
+        all_lable.append(Y_Data[i][:-4])
+    assert len(all_data)==len(all_lable)
+    print all_data.shape
+    print all_lable.shape
+    np.save('feature_test_inception_v3.npy',all_data)
+    np.save('lable_test_inception_v3.npy',all_lable)
+
+
 def train():
     inception_data = np.load('feature_inception_v3.npy').astype(np.float)
     densenet_data = np.load('feature_densenet161.npy').astype(np.float)
@@ -94,14 +156,14 @@ def train():
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
     proportion = 0.8
     batch_size = 64
-    train_X = all_data[:int(all_data.shape[0]*proportion)]
+    train_X = all_data[:int(all_data.shape[0] * proportion)]
     test_X = all_data[int(all_data.shape[0] * proportion):]
 
-    train_Y = lable[:int(lable.shape[0]*proportion)]
-    test_Y = lable[int(lable.shape[0]*proportion):]
+    train_Y = lable[:int(lable.shape[0] * proportion)]
+    test_Y = lable[int(lable.shape[0] * proportion):]
     print all_data.shape
     print lable.shape
-    model = Fc_Net(all_data.shape[1],100)
+    model = Fc_Net(all_data.shape[1], 100)
     model = model.cuda()
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
@@ -110,8 +172,8 @@ def train():
 
     epochs = 1000
     for e in range(epochs):
-        num_batches_train = int(train_X.shape[0] / batch_size)+1
-        train_acc= 0.0
+        num_batches_train = int(train_X.shape[0] / batch_size) + 1
+        train_acc = 0.0
         cost = 0.0
         widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'))]
         pbar = ProgressBar(widgets=widgets, maxval=num_batches_train)
@@ -128,17 +190,17 @@ def train():
             cost += cost_temp
             pbar.update(i)
         pbar.finish()
-        print 'Epoch %d ,all average train loss is : %f' % (e,cost / (num_batches_train))
-        print 'Epoch %d ,all average train acc is : %f' % (e,train_acc / (num_batches_train))
+        print 'Epoch %d ,all average train loss is : %f' % (e, cost / (num_batches_train))
+        print 'Epoch %d ,all average train acc is : %f' % (e, train_acc / (num_batches_train))
         model.training = False
         acc = 0.0
-        num_batches_test = int(test_X.shape[0] / batch_size)+1
+        num_batches_test = int(test_X.shape[0] / batch_size) + 1
         for j in range(num_batches_test):
             start, end = j * batch_size, (j + 1) * batch_size
             predY = predict(model, torch.from_numpy(test_X[start:end]).float())
             acc += 1. * np.mean(predY == test_Y[start:end])
 
-        print 'Epoch %d ,all test acc is : %f' % (e,acc / num_batches_test)
+        print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
 
 
 if __name__ == '__main__':
