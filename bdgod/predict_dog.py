@@ -80,7 +80,7 @@ def main():
             img = cv2.resize(img, (299, 299))
             img = img.transpose(2, 0, 1)
             X_data.append(img[None, ...])
-            if count % 32 == 0:
+            if count % 64 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
                 # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
@@ -103,9 +103,10 @@ def main():
 
     X_data_NP = np.concatenate(X_data, axis=0)
     print X_data_NP.shape
-    X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-    X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-    X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+    # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+    # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+    # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+    X_data_NP = preprocess_input(X_data_NP)
     teX = torch.from_numpy(X_data_NP).float()
     predY = predict(model, teX)
     print predY.shape
