@@ -38,6 +38,8 @@ def main():
     all_lable = np.zeros((0,1))
     for j in range(num_batches + 1):
         teX, teY = data_l.get_test_data()
+        print teY.shape
+        print all_lable.shape
         teX = teX.transpose(0, 3, 1, 2)
         # teX[:, 0, ...] -= MEAN_VALUE[0]
         # teX[:, 1, ...] -= MEAN_VALUE[1]
