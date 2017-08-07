@@ -149,6 +149,33 @@ def get_test_feature():
     np.save('lable_test_densenet161.npy',all_lable)
 
 
+def predict():
+    inception_data = np.load('feature_test_inception_v3.npy').astype(np.float)
+    densenet_data = np.load('feature_test_densenet161.npy').astype(np.float)
+    resnet_data = np.load('feature_test_resnet101.npy').astype(np.float)
+    lable = np.load('lable_test_resnet101.npy')
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
+    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
+    batch_size = 64
+    predict_lable = np.zeros((0))
+    num_batches_train= int(all_data.shape[0] / batch_size) + 1
+    for i in range(num_batches_train):
+        start, end = i * batch_size, (i + 1) * batch_size
+        batch_trX = all_data[start:end]
+        predY = predict(model, torch.from_numpy(batch_trX).float())
+        predict_lable = np.concatenate((predict_lable, predY), axis=0)
+    print predict_lable.shape
+    predict_lable = predict_lable[:len(lable)]
+    print predict_lable.shape
+    dog_key = os.listdir(Image_Path)
+    key_map = {dog_key[x]: x for x in range(100)}
+
+    for i in range(len(lable)):
+        for key, value in key_map.iteritems():
+            if value == predict_lable[i]:
+                with open('predict_dog_ens.txt', 'a') as f:
+                    f.write('%s\t%s\n' % (key, lable[i]))
+
 def train():
     inception_data = np.load('feature_inception_v3.npy').astype(np.float)
     densenet_data = np.load('feature_densenet161.npy').astype(np.float)
@@ -157,12 +184,12 @@ def train():
 
 
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    # nn = range(len(all_data))
-    # np.random.shuffle(nn)
-    # all_data = all_data[nn]
-    # lable = lable[nn]
+    nn = range(len(all_data))
+    np.random.shuffle(nn)
+    all_data = all_data[nn]
+    lable = lable[nn]
     proportion = 0.85
-    batch_size = 64
+    batch_size = 128
     train_X = all_data[:int(all_data.shape[0] * proportion)]
     test_X = all_data[int(all_data.shape[0] * proportion):]
 
@@ -208,7 +235,7 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_1.pkl' % ('SGD', str(e)))
+        torch.save(model, 'models/fcnet_model_shuffle_%s_%s_1.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
     train()
