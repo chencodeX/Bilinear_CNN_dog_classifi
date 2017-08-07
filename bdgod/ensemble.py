@@ -114,6 +114,7 @@ def train():
         widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'))]
         pbar = ProgressBar(widgets=widgets, maxval=num_batches_train)
         pbar.start()
+        model.training = True
         for i in range(num_batches_train):
             start, end = i * batch_size, (i + 1) * batch_size
             batch_trX = train_X[start:end]
@@ -127,6 +128,7 @@ def train():
         pbar.finish()
         print 'Epoch %d ,all average train loss is : %f' % (e,cost / (num_batches_train))
         print 'Epoch %d ,all average train acc is : %f' % (e,train_acc / (num_batches_train))
+        model.training = False
         acc = 0.0
         num_batches_test = int(test_X.shape[0] / batch_size)+1
         for j in range(num_batches_test):
