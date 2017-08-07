@@ -101,7 +101,7 @@ def train():
     test_Y = lable[int(lable.shape[0]*proportion):]
     print all_data.shape
     print lable.shape
-    model = Fc_Net(all_data.shape[1],lable.shape[1])
+    model = Fc_Net(all_data.shape[1],100)
     model = model.cuda()
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
