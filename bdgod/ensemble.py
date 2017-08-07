@@ -161,7 +161,7 @@ def train():
     np.random.shuffle(nn)
     all_data = all_data[nn]
     lable = lable[nn]
-    proportion = 0.8
+    proportion = 0.85
     batch_size = 64
     train_X = all_data[:int(all_data.shape[0] * proportion)]
     test_X = all_data[int(all_data.shape[0] * proportion):]
