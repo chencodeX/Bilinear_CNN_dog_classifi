@@ -28,7 +28,7 @@ def preprocess_input(x):
 
 
 def main():
-    data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=True,
+    data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
                  data_size=299,nb_classes=100)
 
     model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
@@ -49,7 +49,7 @@ def main():
         futures = predict(model, teX)
         print futures.shape
         all_data = np.concatenate((all_data,futures),axis=0)
-        all_lable = np.concatenate((all_data,teY),axis=0)
+        all_lable = np.concatenate((all_lable,teY),axis=0)
 
     print all_data.shape
     print all_lable.shape
