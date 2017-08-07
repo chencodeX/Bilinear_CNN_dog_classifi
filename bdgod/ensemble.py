@@ -47,7 +47,7 @@ def main():
         # teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
         futures = predict(model, teX)
-        # print futures.shape
+        print futures.shape
         all_data = np.concatenate((all_data,futures),axis=0)
         all_lable = np.concatenate((all_lable,teY),axis=0)
 
