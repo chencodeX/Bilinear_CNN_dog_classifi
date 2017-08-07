@@ -40,7 +40,7 @@ class data_loader_(object):
         # print pic_data
         random.shuffle(pic_data)
 
-        file_d = open('pkls/all_pic_infs_test.pkl', 'rb')
+        file_d = open('all_pic_infs1.pkl', 'rb')
         pic_test_data = pickle.load(file_d)
         file_d.close()
 
@@ -132,13 +132,8 @@ class data_loader_(object):
             img_temp = cv2.imread(image_path)
             img_temp_arr = np.array(img_temp)
             corp_img = img_temp_arr[point_value[1]:point_value[3], point_value[0]:point_value[2]]
-            # print point_value
-            # print image_path
-            # print corp_img.shape
-            # print self.data_size
             corp_img = cv2.resize(corp_img, (self.data_size, self.data_size))
             corp_img = corp_img[np.newaxis, ...]
-            # print corp_img.shape
             result = np.concatenate((result, corp_img), axis=0)
         if self.onehot:
             targets = np.array(all_labels).reshape(-1)

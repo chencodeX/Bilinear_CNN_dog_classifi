@@ -64,8 +64,8 @@ def findmode(values):
 
 def main():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
-    model.training = False
+    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
+    # model.training = False
     X_data = []
     Y_Data = []
     dog_key = os.listdir(Image_Path)
@@ -83,10 +83,10 @@ def main():
             if count % 64 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
-                # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-                # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-                # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
-                X_data_NP = preprocess_input(X_data_NP)
+                X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+                X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+                X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                # X_data_NP = preprocess_input(X_data_NP)
                 teX = torch.from_numpy(X_data_NP).float()
                 predY = predict(model, teX)
                 print predY.shape
