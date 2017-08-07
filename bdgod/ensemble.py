@@ -25,7 +25,7 @@ def predict(model, x_val):
     return output.cpu().data.numpy().argmax(axis=1)
 
 
-def train(model, loss, optimizer, x_val, y_val):
+def train_model(model, loss, optimizer, x_val, y_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     y = Variable(y_val.cuda(), requires_grad=False)
     optimizer.zero_grad()
@@ -123,7 +123,7 @@ def train():
             batch_trY = train_Y[start:end]
             tor_batch_trX = torch.from_numpy(batch_trX)
             tor_batch_trY = torch.from_numpy(batch_trY)
-            cost_temp, acc_temp = train(model, loss, optimizer, tor_batch_trX, tor_batch_trY)
+            cost_temp, acc_temp = train_model(model, loss, optimizer, tor_batch_trX, tor_batch_trY)
             train_acc += acc_temp
             cost += cost_temp
             pbar.update(i)
