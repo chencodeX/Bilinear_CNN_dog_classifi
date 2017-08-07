@@ -125,7 +125,7 @@ class Inception3(nn.Module):
         # 1 x 1 x 2048
         x = x.view(x.size(0), -1)
         future = x.clone()
-        # print future.size()
+        print future.size()
         # print '12321'
         # 2048
         x = self.group1(x)
