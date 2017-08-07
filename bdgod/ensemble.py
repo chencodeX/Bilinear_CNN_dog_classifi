@@ -149,7 +149,7 @@ def get_test_feature():
     np.save('lable_test_densenet161.npy',all_lable)
 
 
-def predict():
+def predict_ens():
     inception_data = np.load('feature_test_inception_v3.npy').astype(np.float)
     densenet_data = np.load('feature_test_densenet161.npy').astype(np.float)
     resnet_data = np.load('feature_test_resnet101.npy').astype(np.float)
