@@ -145,8 +145,8 @@ def get_test_feature():
     assert len(all_data)==len(all_lable)
     print all_data.shape
     print len(all_lable)
-    np.save('feature_test_resnet101.npy',all_data)
-    np.save('lable_test_resnet101.npy',all_lable)
+    np.save('feature_test_densenet161.npy',all_data)
+    np.save('lable_test_densenet161.npy',all_lable)
 
 
 def train():
