@@ -64,7 +64,7 @@ def findmode(values):
 
 def main():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
+    model = torch.load('models/inception_v3_model_pretrained_SGD_12_498_1.pkl')
     # model.training = False
     X_data = []
     Y_Data = []
@@ -77,16 +77,16 @@ def main():
         if os.path.exists(image_path):
             Y_Data.append(file_name)
             img = cv2.imread(image_path) * 1.0
-            img = cv2.resize(img, (224, 224))
+            img = cv2.resize(img, (299, 299))
             img = img.transpose(2, 0, 1)
             X_data.append(img[None, ...])
             if count % 32 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
-                X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-                X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-                X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
-                # X_data_NP = preprocess_input(X_data_NP)
+                # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+                # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+                # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                X_data_NP = preprocess_input(X_data_NP)
                 teX = torch.from_numpy(X_data_NP).float()
                 predY = predict(model, teX)
                 print predY.shape
