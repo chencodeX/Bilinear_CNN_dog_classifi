@@ -59,7 +59,7 @@ def main():
     print all_data.shape
     print all_lable.shape
     np.save('future_densenet161.npy',all_data)
-    np.save('lable_densenet161.npy', all_data)
+    np.save('lable_densenet161.npy', all_lable)
 
 if __name__ == '__main__':
     main()
