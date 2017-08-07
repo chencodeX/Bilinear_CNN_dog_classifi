@@ -38,7 +38,7 @@ def main():
     all_lable = np.zeros((0))
     for j in range(num_batches + 1):
         teX, teY = data_l.get_test_data()
-        print teY.shape
+        # print teY.shape
         print all_lable.shape
         teX = teX.transpose(0, 3, 1, 2)
         # teX[:, 0, ...] -= MEAN_VALUE[0]
@@ -47,7 +47,7 @@ def main():
         teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
         futures = predict(model, teX)
-        print futures.shape
+        # print futures.shape
         all_data = np.concatenate((all_data,futures),axis=0)
         all_lable = np.concatenate((all_lable,teY),axis=0)
 
