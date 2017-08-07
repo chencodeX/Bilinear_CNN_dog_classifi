@@ -159,6 +159,6 @@ class DenseNet(nn.Module):
         # temp_size = features.size(0)
         out = F.relu(features, inplace=True)
         out = F.avg_pool2d(out, kernel_size=7).view(features.size(0), -1)
-        print out.size()
+        ft = out.clone()
         out = self.classifier(out)
-        return out
+        return out,ft
