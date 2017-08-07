@@ -29,9 +29,9 @@ def preprocess_input(x):
 
 def main():
     data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
-                 data_size=299,nb_classes=100)
+                 data_size=224,nb_classes=100)
 
-    model = torch.load('models/inception_v3_model_pretrained_SGD_12_498_1.pkl')
+    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0,2048)).astype(np.float)
@@ -59,7 +59,7 @@ def main():
     print all_data.shape
     print all_lable.shape
     # np.save('future_densenet161.npy',all_data)
-    np.save('lable_inception_v3.npy', all_lable)
+    np.save('lable_resnet101.npy', all_lable)
 
 if __name__ == '__main__':
     main()
