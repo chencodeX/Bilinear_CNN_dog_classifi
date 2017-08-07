@@ -92,7 +92,7 @@ def train():
     resnet_data = np.load('feature_resnet101.npy').astype(np.float)
     lable = np.load('lable_resnet101.npy')
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    proportion = 0.85
+    proportion = 0.8
     batch_size = 64
     train_X = all_data[:int(all_data.shape[0]*proportion)]
     test_X = all_data[int(all_data.shape[0] * proportion):]
