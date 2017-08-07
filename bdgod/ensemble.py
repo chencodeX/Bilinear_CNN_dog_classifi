@@ -154,7 +154,13 @@ def train():
     densenet_data = np.load('feature_densenet161.npy').astype(np.float)
     resnet_data = np.load('feature_resnet101.npy').astype(np.float)
     lable = np.load('lable_resnet101.npy')
+
+
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
+    nn = range(len(all_data))
+    np.random.shuffle(nn)
+    all_data = all_data[nn]
+    lable = lable[nn]
     proportion = 0.8
     batch_size = 64
     train_X = all_data[:int(all_data.shape[0] * proportion)]
