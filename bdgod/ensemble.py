@@ -31,7 +31,7 @@ def main():
     data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
                  data_size=299,nb_classes=100)
 
-    model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
+    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0,2048)).astype(np.float)
@@ -41,10 +41,10 @@ def main():
         # print teY.shape
         print all_lable.shape
         teX = teX.transpose(0, 3, 1, 2)
-        # teX[:, 0, ...] -= MEAN_VALUE[0]
-        # teX[:, 1, ...] -= MEAN_VALUE[1]
-        # teX[:, 2, ...] -= MEAN_VALUE[2]
-        teX = preprocess_input(teX)
+        teX[:, 0, ...] -= MEAN_VALUE[0]
+        teX[:, 1, ...] -= MEAN_VALUE[1]
+        teX[:, 2, ...] -= MEAN_VALUE[2]
+        # teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
         futures = predict(model, teX)
         # print futures.shape
@@ -58,8 +58,8 @@ def main():
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
-    np.save('future_inception_v3.npy',all_data)
-    np.save('lable_inception_v3.npy', all_data)
+    np.save('future_resnet101.npy',all_data)
+    np.save('lable_resnet101.npy', all_data)
 
 if __name__ == '__main__':
     main()
