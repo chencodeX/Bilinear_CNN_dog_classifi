@@ -58,7 +58,8 @@ def main():
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
-
+    np.save('future_inception_v3.npy',all_data)
+    np.save('lable_inception_v3.npy', all_data)
 
 if __name__ == '__main__':
     main()
