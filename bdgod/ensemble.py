@@ -28,10 +28,10 @@ def preprocess_input(x):
 
 
 def main():
-    data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
+    data_l = data_loader_(batch_size=32, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
                  data_size=224,nb_classes=100)
 
-    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
+    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0,2048)).astype(np.float)
