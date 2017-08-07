@@ -32,6 +32,7 @@ def main():
                  data_size=299,nb_classes=100)
 
     model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
+    model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0,2048)).astype(np.float)
     all_lable = np.zeros((0,1))

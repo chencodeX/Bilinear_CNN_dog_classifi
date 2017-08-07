@@ -132,6 +132,7 @@ class Inception3(nn.Module):
         # 1000 (num_classes)
         if self.training and self.aux_logits:
             return x, aux
+        print future.size()
         return x,future
 
 
