@@ -27,7 +27,7 @@ def preprocess_input(x):
 
 
 def main():
-    data_l = data_loader_(batch_size=64, band_num=0, tag_id=0, shuffle=False, data_add=4, onehot=True,
+    data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=True,
                  data_size=299,nb_classes=100)
 
     model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
