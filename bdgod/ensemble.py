@@ -52,3 +52,7 @@ def main():
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
+
+
+if __name__ == '__main__':
+    main()
