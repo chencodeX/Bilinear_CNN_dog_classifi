@@ -16,6 +16,7 @@ def predict(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
     if type(output) == tuple:
+        print output[1].size()
         return output[1].cpu().data.numpy()
     return output.cpu().data.numpy().argmax(axis=1)
 
