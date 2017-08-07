@@ -208,7 +208,7 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_%s_4.pkl' % ('SGD', str(e), str(k)))
+        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_1.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
     train()
