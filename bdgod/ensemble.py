@@ -185,10 +185,10 @@ def train():
 
 
     all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    nn = range(len(all_data))
-    np.random.shuffle(nn)
-    all_data = all_data[nn]
-    lable = lable[nn]
+    # nn = range(len(all_data))
+    # np.random.shuffle(nn)
+    # all_data = all_data[nn]
+    # lable = lable[nn]
     proportion = 0.85
     batch_size = 128
     train_X = all_data[:int(all_data.shape[0] * proportion)]
@@ -203,7 +203,7 @@ def train():
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
 
-    optimizer = optim.SGD(model.parameters(), lr=(0.001), momentum=0.9, weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr=(0.0001), momentum=0.9, weight_decay=0.0005)
 
     epochs = 1000
     for e in range(epochs):
@@ -236,7 +236,7 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-        torch.save(model, 'models/fcnet_model_shuffle_%s_%s_1.pkl' % ('SGD', str(e)))
+        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_1.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
     predict_ens()
