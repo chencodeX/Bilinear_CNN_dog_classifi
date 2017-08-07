@@ -239,4 +239,4 @@ def train():
         torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_1.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
-    predict_ens()
+    train()
