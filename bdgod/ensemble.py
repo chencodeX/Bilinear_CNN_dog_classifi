@@ -26,7 +26,7 @@ def preprocess_input(x):
 
 def main():
     data_l = data_loader_(batch_size=64, band_num=0, tag_id=0, shuffle=False, data_add=4, onehot=True,
-                 data_size=224,nb_classes=100)
+                 data_size=299,nb_classes=100)
 
     model = torch.load('models/inception_v3_model_pretrained_SGD_14_498_1.pkl')
     num_batches = data_l.test_length / data_l.batch_szie
@@ -35,9 +35,9 @@ def main():
     for j in range(num_batches + 1):
         teX, teY = data_l.get_test_data()
         teX = teX.transpose(0, 3, 1, 2)
-        teX[:, 0, ...] -= MEAN_VALUE[0]
-        teX[:, 1, ...] -= MEAN_VALUE[1]
-        teX[:, 2, ...] -= MEAN_VALUE[2]
+        # teX[:, 0, ...] -= MEAN_VALUE[0]
+        # teX[:, 1, ...] -= MEAN_VALUE[1]
+        # teX[:, 2, ...] -= MEAN_VALUE[2]
         teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
         futures = predict(model, teX)
