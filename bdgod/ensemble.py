@@ -45,20 +45,20 @@ def main():
         teX[:, 1, ...] -= MEAN_VALUE[1]
         teX[:, 2, ...] -= MEAN_VALUE[2]
         # teX = preprocess_input(teX)
-        teX = torch.from_numpy(teX).float()
-        futures = predict(model, teX)
-        print futures.shape
-        all_data = np.concatenate((all_data,futures),axis=0)
+        # teX = torch.from_numpy(teX).float()
+        # futures = predict(model, teX)
+        # print futures.shape
+        # all_data = np.concatenate((all_data,futures),axis=0)
         all_lable = np.concatenate((all_lable,teY),axis=0)
 
-    print all_data.shape
+    # print all_data.shape
     print all_lable.shape
 
-    all_data = all_data[:data_l.test_length]
+    # all_data = all_data[:data_l.test_length]
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
-    np.save('future_densenet161.npy',all_data)
+    # np.save('future_densenet161.npy',all_data)
     np.save('lable_densenet161.npy', all_lable)
 
 if __name__ == '__main__':
