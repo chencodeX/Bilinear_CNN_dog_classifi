@@ -154,8 +154,14 @@ def predict_ens():
     densenet_data = np.load('feature_test_densenet161.npy').astype(np.float)
     resnet_data = np.load('feature_test_resnet101.npy').astype(np.float)
     lable = np.load('lable_test_resnet101.npy')
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
-    model = torch.load('models/fcnet_model_noshuffle_SGD_213_1.pkl')
+    _inception_data = inception_data.copy()
+    _resnet_data = resnet_data.copy()
+    _inception_data = _inception_data[...,np.newaxis]
+    _resnet_data = _resnet_data[...,np.newaxis]
+    max_data = np.concatenate((_inception_data,_resnet_data),axis=2)
+    max_data = max_data.max(axis=2)
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data,max_data), axis=1)
+    model = torch.load('models/fcnet_model_shuffle_SGD_760_3.pkl')
     model.training = False
     batch_size = 64
     predict_lable = np.zeros((0))
@@ -248,4 +254,4 @@ def train():
         torch.save(model, 'models/fcnet_model_shuffle_%s_%s_3.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
-    train()
+    predict_ens()
