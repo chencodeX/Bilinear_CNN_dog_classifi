@@ -262,4 +262,4 @@ def train():
 
 
 if __name__ == '__main__':
-    predict_ens()
+    train()
