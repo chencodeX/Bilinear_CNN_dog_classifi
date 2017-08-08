@@ -23,6 +23,7 @@ def predict(model, x_val):
         return output[0].cpu().data.numpy().argmax(axis=1)
     return output.cpu().data.numpy().argmax(axis=1)
 
+
 def predict_feature(model, x_val):
     x = Variable(x_val.cuda(), requires_grad=False)
     output = model.forward(x)
@@ -142,11 +143,11 @@ def get_test_feature():
 
     for i in range(len(Y_Data)):
         all_lable.append(Y_Data[i][:-4])
-    assert len(all_data)==len(all_lable)
+    assert len(all_data) == len(all_lable)
     print all_data.shape
     print len(all_lable)
-    np.save('feature_test_densenet161.npy',all_data)
-    np.save('lable_test_densenet161.npy',all_lable)
+    np.save('feature_test_densenet161.npy', all_data)
+    np.save('lable_test_densenet161.npy', all_lable)
 
 
 def predict_ens():
@@ -156,16 +157,16 @@ def predict_ens():
     lable = np.load('lable_test_resnet101.npy')
     _inception_data = inception_data.copy()
     _resnet_data = resnet_data.copy()
-    _inception_data = _inception_data[...,np.newaxis]
-    _resnet_data = _resnet_data[...,np.newaxis]
-    max_data = np.concatenate((_inception_data,_resnet_data),axis=2)
+    _inception_data = _inception_data[..., np.newaxis]
+    _resnet_data = _resnet_data[..., np.newaxis]
+    max_data = np.concatenate((_inception_data, _resnet_data), axis=2)
     max_data = max_data.max(axis=2)
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data,max_data), axis=1)
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data, max_data), axis=1)
     model = torch.load('models/fcnet_model_shuffle_SGD_760_3.pkl')
     model.training = False
     batch_size = 64
     predict_lable = np.zeros((0))
-    num_batches_train= int(all_data.shape[0] / batch_size) + 1
+    num_batches_train = int(all_data.shape[0] / batch_size) + 1
     for i in range(num_batches_train):
         start, end = i * batch_size, (i + 1) * batch_size
         batch_trX = all_data[start:end]
@@ -183,25 +184,33 @@ def predict_ens():
                 with open('predict_dog_ens.txt', 'a') as f:
                     f.write('%s\t%s\n' % (key, lable[i]))
 
+
+def adjust_learning_rate(optimizer, epoch):
+    """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
+    lr = 0.05 * (0.95 ** (epoch // 5))
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr
+
+
 def train():
     inception_data = np.load('feature_inception_v3.npy').astype(np.float)
     densenet_data = np.load('feature_densenet161.npy').astype(np.float)
     resnet_data = np.load('feature_resnet101.npy').astype(np.float)
     lable = np.load('lable_resnet101.npy')
 
-    mean_data = (inception_data + resnet_data)/2.
+    add_data = (inception_data + resnet_data)
     _inception_data = inception_data.copy()
     _resnet_data = resnet_data.copy()
-    _inception_data = _inception_data[...,np.newaxis]
-    _resnet_data = _resnet_data[...,np.newaxis]
-    max_data = np.concatenate((_inception_data,_resnet_data),axis=2)
+    _inception_data = _inception_data[..., np.newaxis]
+    _resnet_data = _resnet_data[..., np.newaxis]
+    max_data = np.concatenate((_inception_data, _resnet_data), axis=2)
     max_data = max_data.max(axis=2)
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data,max_data), axis=1)
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
     nn = range(len(all_data))
     np.random.shuffle(nn)
     all_data = all_data[nn]
     lable = lable[nn]
-    proportion = 0.85
+    proportion = 0.9
     batch_size = 128
     train_X = all_data[:int(all_data.shape[0] * proportion)]
     test_X = all_data[int(all_data.shape[0] * proportion):]
@@ -215,13 +224,11 @@ def train():
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
 
-    optimizer = optim.SGD(model.parameters(), lr=(0.001), momentum=0.9, weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr = 0.0005, momentum = 0.75, weight_decay = 1e-4)
 
     epochs = 1000
     for e in range(epochs):
-        if e == 100:
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = param_group['lr'] * 0.1
+        adjust_learning_rate(optimizer, e)
         num_batches_train = int(train_X.shape[0] / batch_size) + 1
         train_acc = 0.0
         cost = 0.0
@@ -251,7 +258,8 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-        torch.save(model, 'models/fcnet_model_shuffle_%s_%s_3.pkl' % ('SGD', str(e)))
+        torch.save(model, 'models/fcnet_model_shuffle_%s_%s_4.pkl' % ('SGD', str(e)))
+
 
 if __name__ == '__main__':
     predict_ens()
