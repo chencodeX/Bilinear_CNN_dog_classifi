@@ -155,16 +155,17 @@ def predict_ens():
     densenet_data = np.load('feature_test_densenet161.npy').astype(np.float)
     resnet_data = np.load('feature_test_resnet101.npy').astype(np.float)
     lable = np.load('lable_test_resnet101.npy')
+    add_data = (inception_data + resnet_data)
     _inception_data = inception_data.copy()
     _resnet_data = resnet_data.copy()
     _inception_data = _inception_data[..., np.newaxis]
     _resnet_data = _resnet_data[..., np.newaxis]
     max_data = np.concatenate((_inception_data, _resnet_data), axis=2)
     max_data = max_data.max(axis=2)
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data, max_data), axis=1)
-    model = torch.load('models/fcnet_model_shuffle_SGD_760_3.pkl')
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
+    model = torch.load('models/fcnet_model_shuffle_SGD_123_4.pkl')
     model.training = False
-    batch_size = 64
+    batch_size = 128
     predict_lable = np.zeros((0))
     num_batches_train = int(all_data.shape[0] / batch_size) + 1
     for i in range(num_batches_train):
@@ -181,7 +182,7 @@ def predict_ens():
     for i in range(len(lable)):
         for key, value in key_map.iteritems():
             if value == predict_lable[i]:
-                with open('predict_dog_ens.txt', 'a') as f:
+                with open('predict_dog_ens_1.txt', 'a') as f:
                     f.write('%s\t%s\n' % (key, lable[i]))
 
 
