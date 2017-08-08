@@ -10,6 +10,9 @@ import cv2
 from torch import optim
 from fc_net import Fc_Net
 from torch.autograd import Variable
+from scipy.stats import mode
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold
 from utils.cv_data_loder import data_loader_
 from progressbar import *
 import random
@@ -193,6 +196,97 @@ def adjust_learning_rate(optimizer, epoch):
         param_group['lr'] = lr
 
 
+def CV_train():
+    inception_data = np.load('feature_inception_v3.npy').astype(np.float)
+    densenet_data = np.load('feature_densenet161.npy').astype(np.float)
+    resnet_data = np.load('feature_resnet101.npy').astype(np.float)
+    lable = np.load('lable_resnet101.npy')
+
+    inception_test_data = np.load('feature_test_inception_v3.npy').astype(np.float)
+    densenet_test_data = np.load('feature_test_densenet161.npy').astype(np.float)
+    resnet_test_data = np.load('feature_test_resnet101.npy').astype(np.float)
+    lable_test = np.load('lable_test_resnet101.npy')
+
+    add__test_data = (inception_test_data + resnet_test_data)
+    all_test_data = np.concatenate((inception_test_data, densenet_test_data, resnet_test_data, add__test_data), axis=1)
+
+
+    add_data = (inception_data + resnet_data)
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
+    test_preds = []
+    skf = StratifiedKFold(n_splits=6)
+    for train_index, test_index in skf.split(all_data, lable):
+        train_X = all_data[train_index]
+        test_X = all_data[test_index]
+        train_Y = lable[train_index]
+        test_Y = lable[test_index]
+
+        batch_size = 128
+
+        model = Fc_Net(all_data.shape[1], 100)
+        model = model.cuda()
+        loss = torch.nn.CrossEntropyLoss(size_average=True)
+        loss = loss.cuda()
+
+        optimizer = optim.SGD(model.parameters(), lr=0.0005, momentum=0.75, weight_decay=1e-4)
+
+        epochs = 80
+        for e in range(epochs):
+            adjust_learning_rate(optimizer, e)
+            num_batches_train = int(train_X.shape[0] / batch_size) + 1
+            train_acc = 0.0
+            cost = 0.0
+            widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker('>'))]
+            pbar = ProgressBar(widgets=widgets, maxval=num_batches_train)
+            pbar.start()
+            model.training = True
+            for i in range(num_batches_train):
+                start, end = i * batch_size, (i + 1) * batch_size
+                batch_trX = train_X[start:end]
+                batch_trY = train_Y[start:end]
+                tor_batch_trX = torch.from_numpy(batch_trX).float()
+                tor_batch_trY = torch.from_numpy(batch_trY).long()
+                cost_temp, acc_temp = train_model(model, loss, optimizer, tor_batch_trX, tor_batch_trY)
+                train_acc += acc_temp
+                cost += cost_temp
+                pbar.update(i)
+            pbar.finish()
+            print 'Epoch %d ,all average train loss is : %f' % (e, cost / (num_batches_train))
+            print 'Epoch %d ,all average train acc is : %f' % (e, train_acc / (num_batches_train))
+            model.training = False
+            acc = 0.0
+            num_batches_test = int(test_X.shape[0] / batch_size) + 1
+            for j in range(num_batches_test):
+                start, end = j * batch_size, (j + 1) * batch_size
+                predY = predict(model, torch.from_numpy(test_X[start:end]).float())
+                acc += 1. * np.mean(predY == test_Y[start:end])
+
+            print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
+            # torch.save(model, 'models/fcnet_model_shuffle_%s_%s_4.pkl' % ('SGD', str(e)))
+
+        #预测样本
+        predict_lable = np.zeros((0))
+        num_batches_train = int(all_test_data.shape[0] / batch_size) + 1
+        for i in range(num_batches_train):
+            start, end = i * batch_size, (i + 1) * batch_size
+            batch_trX = all_test_data[start:end]
+            predY = predict(model, torch.from_numpy(batch_trX).float())
+            predict_lable = np.concatenate((predict_lable, predY), axis=0)
+        print predict_lable.shape
+        predict_lable = predict_lable[:len(lable_test)]
+        print predict_lable.shape
+        test_preds.append(predict_lable)
+    test_preds = np.array(test_preds)
+    dog_key = os.listdir(Image_Path)
+    key_map = {dog_key[x]: x for x in range(100)}
+
+    for i in range(len(lable_test)):
+        for key, value in key_map.iteritems():
+            mode_value = mode(test_preds[:,i])[0][0]
+            if value == mode_value:
+                with open('predict_dog_ens_2.txt', 'a') as f:
+                    f.write('%s\t%s\n' % (key, lable_test[i]))
+
 def train():
     inception_data = np.load('feature_inception_v3.npy').astype(np.float)
     densenet_data = np.load('feature_densenet161.npy').astype(np.float)
@@ -225,7 +319,7 @@ def train():
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
 
-    optimizer = optim.SGD(model.parameters(), lr = 0.0005, momentum = 0.75, weight_decay = 1e-4)
+    optimizer = optim.SGD(model.parameters(), lr=0.0005, momentum=0.75, weight_decay=1e-4)
 
     epochs = 1000
     for e in range(epochs):
@@ -263,4 +357,4 @@ def train():
 
 
 if __name__ == '__main__':
-    predict_ens()
+    CV_train()
