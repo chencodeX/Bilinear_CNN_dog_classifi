@@ -209,10 +209,13 @@ def train():
     loss = torch.nn.CrossEntropyLoss(size_average=True)
     loss = loss.cuda()
 
-    optimizer = optim.SGD(model.parameters(), lr=(0.0001), momentum=0.9, weight_decay=0.0005)
+    optimizer = optim.SGD(model.parameters(), lr=(0.001), momentum=0.9, weight_decay=0.0005)
 
     epochs = 1000
     for e in range(epochs):
+        if e == 20:
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = param_group['lr'] * 0.1
         num_batches_train = int(train_X.shape[0] / batch_size) + 1
         train_acc = 0.0
         cost = 0.0
