@@ -183,8 +183,8 @@ def train():
     resnet_data = np.load('feature_resnet101.npy').astype(np.float)
     lable = np.load('lable_resnet101.npy')
 
-
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data), axis=1)
+    mean_data = (inception_data + resnet_data)/2.
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data,mean_data), axis=1)
     # nn = range(len(all_data))
     # np.random.shuffle(nn)
     # all_data = all_data[nn]
@@ -236,7 +236,7 @@ def train():
             acc += 1. * np.mean(predY == test_Y[start:end])
 
         print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
-        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_1.pkl' % ('SGD', str(e)))
+        torch.save(model, 'models/fcnet_model_noshuffle_%s_%s_2.pkl' % ('SGD', str(e)))
 
 if __name__ == '__main__':
     predict_ens()
