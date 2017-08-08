@@ -190,11 +190,11 @@ def train():
     _resnet_data = _resnet_data[...,np.newaxis]
     max_data = np.concatenate((_inception_data,_resnet_data),axis=2)
     max_data = max_data.max(axis=2)
-    all_data = np.concatenate((inception_data, densenet_data, resnet_data,mean_data,max_data), axis=1)
-    # nn = range(len(all_data))
-    # np.random.shuffle(nn)
-    # all_data = all_data[nn]
-    # lable = lable[nn]
+    all_data = np.concatenate((inception_data, densenet_data, resnet_data,max_data), axis=1)
+    nn = range(len(all_data))
+    np.random.shuffle(nn)
+    all_data = all_data[nn]
+    lable = lable[nn]
     proportion = 0.85
     batch_size = 128
     train_X = all_data[:int(all_data.shape[0] * proportion)]
