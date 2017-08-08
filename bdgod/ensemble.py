@@ -184,8 +184,12 @@ def train():
     lable = np.load('lable_resnet101.npy')
 
     mean_data = (inception_data + resnet_data)/2.
-    max_data = inception_data.copy()
-    max_data[max_data<resnet_data]=resnet_data
+    _inception_data = inception_data.copy()
+    _resnet_data = resnet_data.copy()
+    _inception_data = _inception_data[...,np.newaxis]
+    _resnet_data = _resnet_data[...,np.newaxis]
+    max_data = np.concatenate((_inception_data,_resnet_data),axis=2)
+    max_data = max_data.max(axis=2)
     all_data = np.concatenate((inception_data, densenet_data, resnet_data,mean_data,max_data), axis=1)
     # nn = range(len(all_data))
     # np.random.shuffle(nn)
