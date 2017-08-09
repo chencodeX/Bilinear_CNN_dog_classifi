@@ -230,7 +230,7 @@ def CV_train():
 
         optimizer = optim.SGD(model.parameters(), lr=0.0005, momentum=0.75, weight_decay=1e-4)
 
-        epochs = 80
+        epochs = 120
         for e in range(epochs):
             adjust_learning_rate(optimizer, e)
             num_batches_train = int(train_X.shape[0] / batch_size) + 1
