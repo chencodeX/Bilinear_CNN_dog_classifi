@@ -214,7 +214,7 @@ def CV_train():
     add_data = (inception_data + resnet_data)
     all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
     test_preds = []
-    skf = StratifiedKFold(n_splits=6)
+    skf = StratifiedKFold(n_splits=10)
     for train_index, test_index in skf.split(all_data, lable):
         train_X = all_data[train_index]
         test_X = all_data[test_index]
