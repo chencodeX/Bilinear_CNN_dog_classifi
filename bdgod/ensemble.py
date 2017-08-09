@@ -263,7 +263,7 @@ def CV_train():
 
             print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
             # torch.save(model, 'models/fcnet_model_shuffle_%s_%s_4.pkl' % ('SGD', str(e)))
-
+        model.training = False
         #预测样本
         predict_lable = np.zeros((0))
         num_batches_train = int(all_test_data.shape[0] / batch_size) + 1
@@ -284,7 +284,7 @@ def CV_train():
         for key, value in key_map.iteritems():
             mode_value = mode(test_preds[:,i])[0][0]
             if value == mode_value:
-                with open('predict_dog_ens_2.txt', 'a') as f:
+                with open('predict_dog_ens_3.txt', 'a') as f:
                     f.write('%s\t%s\n' % (key, lable_test[i]))
 
 def train():
