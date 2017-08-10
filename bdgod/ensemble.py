@@ -230,7 +230,7 @@ def CV_train():
 
         optimizer = optim.SGD(model.parameters(), lr=0.0005, momentum=0.75, weight_decay=1e-4)
 
-        epochs = 120
+        epochs = 40
         for e in range(epochs):
             adjust_learning_rate(optimizer, e)
             num_batches_train = int(train_X.shape[0] / batch_size) + 1
@@ -284,7 +284,7 @@ def CV_train():
         for key, value in key_map.iteritems():
             mode_value = mode(test_preds[:,i])[0][0]
             if value == mode_value:
-                with open('predict_dog_ens_3.txt', 'a') as f:
+                with open('predict_dog_ens_4.txt', 'a') as f:
                     f.write('%s\t%s\n' % (key, lable_test[i]))
 
 def train():
