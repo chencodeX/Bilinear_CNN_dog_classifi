@@ -213,6 +213,10 @@ def CV_train():
 
     add_data = (inception_data + resnet_data)
     all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
+    nn = range(len(all_data))
+    np.random.shuffle(nn)
+    all_data = all_data[nn]
+    lable = lable[nn]
     test_preds = []
     skf = StratifiedKFold(n_splits=10)
     for train_index, test_index in skf.split(all_data, lable):
