@@ -213,10 +213,10 @@ def CV_train():
 
     add_data = (inception_data + resnet_data)
     all_data = np.concatenate((inception_data, densenet_data, resnet_data, add_data), axis=1)
-    nn = range(len(all_data))
-    np.random.shuffle(nn)
-    all_data = all_data[nn]
-    lable = lable[nn]
+    # nn = range(len(all_data))
+    # np.random.shuffle(nn)
+    # all_data = all_data[nn]
+    # lable = lable[nn]
     test_preds = []
     skf = StratifiedKFold(n_splits=10)
     for train_index, test_index in skf.split(all_data, lable):
@@ -233,7 +233,7 @@ def CV_train():
         loss = loss.cuda()
 
         optimizer = optim.SGD(model.parameters(), lr=0.0005, momentum=0.75, weight_decay=1e-4)
-
+        last_acc = 0.0
         epochs = 40
         for e in range(epochs):
             adjust_learning_rate(optimizer, e)
@@ -266,6 +266,7 @@ def CV_train():
                 acc += 1. * np.mean(predY == test_Y[start:end])
 
             print 'Epoch %d ,all test acc is : %f' % (e, acc / num_batches_test)
+            last_acc = acc / num_batches_test
             # torch.save(model, 'models/fcnet_model_shuffle_%s_%s_4.pkl' % ('SGD', str(e)))
         model.training = False
         #预测样本
@@ -279,7 +280,8 @@ def CV_train():
         print predict_lable.shape
         predict_lable = predict_lable[:len(lable_test)]
         print predict_lable.shape
-        test_preds.append(predict_lable)
+        if (last_acc) > 0.75:
+            test_preds.append(predict_lable)
     test_preds = np.array(test_preds)
     dog_key = os.listdir(Image_Path)
     key_map = {dog_key[x]: x for x in range(100)}
