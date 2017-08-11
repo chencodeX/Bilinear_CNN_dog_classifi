@@ -66,7 +66,7 @@ def main():
     data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
                           data_size=224, nb_classes=100)
 
-    model = torch.load('models/resnet101_model_pretrained_SGD_16_498_1.pkl')
+    model = torch.load('models/resnet101_model_pretrained_SGD_19_498_1.pkl')
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
     all_data = np.zeros((0, 2048)).astype(np.float)
@@ -80,21 +80,21 @@ def main():
         teX[:, 1, ...] -= MEAN_VALUE[1]
         teX[:, 2, ...] -= MEAN_VALUE[2]
         # teX = preprocess_input(teX)
-        # teX = torch.from_numpy(teX).float()
-        # futures = predict(model, teX)
-        # print futures.shape
-        # all_data = np.concatenate((all_data,futures),axis=0)
+        teX = torch.from_numpy(teX).float()
+        futures = predict(model, teX)
+        print futures.shape
+        all_data = np.concatenate((all_data,futures),axis=0)
         all_lable = np.concatenate((all_lable, teY), axis=0)
 
-    # print all_data.shape
+    print all_data.shape
     print all_lable.shape
 
-    # all_data = all_data[:data_l.test_length]
+    all_data = all_data[:data_l.test_length]
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
-    # np.save('future_densenet161.npy',all_data)
-    np.save('lable_resnet101.npy', all_lable)
+    np.save('future_densenet161_t2.npy',all_data)
+    # np.save('lable_resnet101.npy', all_lable)
 
 
 def get_test_feature():
@@ -363,4 +363,4 @@ def train():
 
 
 if __name__ == '__main__':
-    CV_train()
+    main()
