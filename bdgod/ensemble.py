@@ -63,23 +63,23 @@ def preprocess_input(x):
 
 
 def main():
-    data_l = data_loader_(batch_size=32, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
-                          data_size=224, nb_classes=100)
+    data_l = data_loader_(batch_size=64, band_num=1, tag_id=0, shuffle=False, data_add=4, onehot=False,
+                          data_size=299, nb_classes=100)
 
-    model = torch.load('models/densenet161_model_pretrained_SGD_17_996_4.pkl')
+    model = torch.load('models/inception_v3_model_pretrained_SGD_19_498_1.pkl')
     model.training = False
     num_batches = data_l.test_length / data_l.batch_szie
-    all_data = np.zeros((0, 2208)).astype(np.float)
+    all_data = np.zeros((0, 2048)).astype(np.float)
     all_lable = np.zeros((0))
     for j in range(num_batches + 1):
         teX, teY = data_l.get_test_data()
         # print teY.shape
         print all_lable.shape
         teX = teX.transpose(0, 3, 1, 2)
-        teX[:, 0, ...] -= MEAN_VALUE[0]
-        teX[:, 1, ...] -= MEAN_VALUE[1]
-        teX[:, 2, ...] -= MEAN_VALUE[2]
-        # teX = preprocess_input(teX)
+        # teX[:, 0, ...] -= MEAN_VALUE[0]
+        # teX[:, 1, ...] -= MEAN_VALUE[1]
+        # teX[:, 2, ...] -= MEAN_VALUE[2]
+        teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
         futures = predict_feature(model, teX)
         print futures.shape
@@ -93,8 +93,8 @@ def main():
     all_lable = all_lable[:data_l.test_length]
     print all_data.shape
     print all_lable.shape
-    np.save('feature_densenet161_t2.npy',all_data)
-    # np.save('lable_resnet101.npy', all_lable)
+    np.save('feature_inception_v3_t2.npy',all_data)
+    np.save('lable_inception_v3_t2.npy', all_lable)
 
 
 def get_test_feature():
