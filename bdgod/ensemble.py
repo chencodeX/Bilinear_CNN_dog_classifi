@@ -100,7 +100,7 @@ def main():
 def get_test_feature():
     image_files = os.listdir(Test_Image_Path)
     model = torch.load('models/inception_v3_model_pretrained_SGD_19_498_1.pkl')
-    # model.training = False
+    model.training = False
     # model.training = False
     X_data = []
     Y_Data = []
