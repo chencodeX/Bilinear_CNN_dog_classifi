@@ -81,7 +81,7 @@ def main():
         teX[:, 2, ...] -= MEAN_VALUE[2]
         # teX = preprocess_input(teX)
         teX = torch.from_numpy(teX).float()
-        futures = predict(model, teX)
+        futures = predict_feature(model, teX)
         print futures.shape
         all_data = np.concatenate((all_data,futures),axis=0)
         all_lable = np.concatenate((all_lable, teY), axis=0)
