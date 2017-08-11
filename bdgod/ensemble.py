@@ -99,7 +99,7 @@ def main():
 
 def get_test_feature():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/densenet161_model_pretrained_SGD_10_996_4.pkl')
+    model = torch.load('models/densenet161_model_pretrained_SGD_17_996_4.pkl')
     # model.training = False
     # model.training = False
     X_data = []
@@ -149,8 +149,8 @@ def get_test_feature():
     assert len(all_data) == len(all_lable)
     print all_data.shape
     print len(all_lable)
-    np.save('feature_test_densenet161.npy', all_data)
-    np.save('lable_test_densenet161.npy', all_lable)
+    np.save('feature_test_densenet161_t2.npy', all_data)
+    np.save('lable_test_densenet161_t2.npy', all_lable)
 
 
 def predict_ens():
@@ -363,4 +363,4 @@ def train():
 
 
 if __name__ == '__main__':
-    main()
+    get_test_feature()
