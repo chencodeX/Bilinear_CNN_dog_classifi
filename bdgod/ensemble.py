@@ -99,7 +99,7 @@ def main():
 
 def get_test_feature():
     image_files = os.listdir(Test_Image_Path)
-    model = torch.load('models/inception_v3_model_pretrained_SGD_19_498_1.pkl')
+    model = torch.load('models/resnet101_model_pretrained_SGD_19_498_1.pkl')
     model.training = False
     # model.training = False
     X_data = []
@@ -115,16 +115,16 @@ def get_test_feature():
         if os.path.exists(image_path):
             Y_Data.append(file_name)
             img = cv2.imread(image_path) * 1.0
-            img = cv2.resize(img, (299, 299))
+            img = cv2.resize(img, (224, 224))
             img = img.transpose(2, 0, 1)
             X_data.append(img[None, ...])
             if count % 64 == 0:
                 X_data_NP = np.concatenate(X_data, axis=0)
                 print X_data_NP.shape
-                # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-                # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-                # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
-                X_data_NP = preprocess_input(X_data_NP)
+                X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+                X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+                X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+                # X_data_NP = preprocess_input(X_data_NP)
                 teX = torch.from_numpy(X_data_NP).float()
                 futures = predict_feature(model, teX)
                 all_data = np.concatenate((all_data, futures), axis=0)
@@ -136,10 +136,10 @@ def get_test_feature():
 
     X_data_NP = np.concatenate(X_data, axis=0)
     print X_data_NP.shape
-    # X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
-    # X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
-    # X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
-    X_data_NP = preprocess_input(X_data_NP)
+    X_data_NP[:, 0, ...] -= MEAN_VALUE[0]
+    X_data_NP[:, 1, ...] -= MEAN_VALUE[1]
+    X_data_NP[:, 2, ...] -= MEAN_VALUE[2]
+    # X_data_NP = preprocess_input(X_data_NP)
     teX = torch.from_numpy(X_data_NP).float()
     futures = predict_feature(model, teX)
     all_data = np.concatenate((all_data, futures), axis=0)
@@ -149,8 +149,8 @@ def get_test_feature():
     assert len(all_data) == len(all_lable)
     print all_data.shape
     print len(all_lable)
-    np.save('feature_test_inception_v3_t2.npy', all_data)
-    np.save('lable_test_inception_v3_t2.npy', all_lable)
+    np.save('feature_test_resnet101_t2.npy', all_data)
+    np.save('lable_test_resnet101_t2.npy', all_lable)
 
 
 def predict_ens():
