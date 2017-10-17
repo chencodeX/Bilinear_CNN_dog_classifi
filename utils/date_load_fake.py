@@ -34,7 +34,7 @@ class data_loader_(object):
         for i in range(pop_num):
             label = np.random.randint(100)
             all_imgs = np.ones((1,self.data_size, self.data_size, 3))
-            all_imgs = (all_imgs*label*2)+15
+            all_imgs = ((all_imgs*label*2)+15)/255.
             all_labels.append(label)
             result = np.concatenate((result, all_imgs), axis=0)
         if self.onehot:
@@ -53,7 +53,7 @@ class data_loader_(object):
 
             label = np.random.randint(100)
             all_imgs = np.ones((1,self.data_size, self.data_size, 3))
-            all_imgs = (all_imgs*label*2)+15
+            all_imgs = ((all_imgs*label*2)+15)/255.
             all_labels.append(label)
             result = np.concatenate((result, all_imgs), axis=0)
 
