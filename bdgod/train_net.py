@@ -12,7 +12,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch import optim
 from collections import OrderedDict
-from densenet import densenet161
+from densenet import densenet161,densenet169
 from progressbar import *
 from resnet import resnet50, Bottleneck, resnet101
 from inception import inception_v3
@@ -66,7 +66,7 @@ def main():
     torch.manual_seed(23)
     # Band_num = 2
     # Tag_id = 4
-    data_l = data_loader_(batch_size=32,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
+    data_l = data_loader_(batch_size=64,proportion=0.85, shuffle=True, data_add=2, onehot=False, data_size=224, nb_classes=100)
     print data_l.train_length
     print data_l.test_length
     # print 'loading....'
@@ -87,7 +87,7 @@ def main():
     # n_examples = len(trX)
     # n_classes = 100
     # model = torch.load('models/resnet_model_pretrained_adam_2_2_SGD_1.pkl')
-    model = densenet161(pretrained=True)
+    model = densenet169(pretrained=True)
     print '==============================='
     print model
     # for param in model.parameters():
