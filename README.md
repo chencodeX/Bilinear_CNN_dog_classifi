@@ -24,3 +24,4 @@ bdgod  本目录为pytorch实现的vgg和resnet，支持预训练，bilinearCNN�
           resnet.py        定义resnet网络结构
           train_net.py     训练网络
           vggnet.py        定义vgg网络结构
+          BilinearCNN.py   定义BCNN网络结构
