@@ -14,7 +14,7 @@
           utils_.py  工具类
 
 
-bdgod  本目录为pytorch实现的vgg和resnet模型，支持预训练
+bdgod  本目录为pytorch实现的vgg和resnet，支持预训练，bilinearCNN模型，不支持预训练
 
     bdgod/data_augmentation.py   数据增广文件
           dog_config.py   配置文件
